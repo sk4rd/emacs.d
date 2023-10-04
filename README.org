@@ -1,0 +1,185 @@
+#+title: Sk4rd's Emacs Configuration
+#+options: num:nil
+#+property: header-args :results silent
+
+This is my emacs configuration. I daily drive it for programming and
+school.
+
+* Package Management
+
+** package.el
+First of all we have to disable =package.el=, the default Emacs
+package manager, in order to use an alternative called [[https://github.com/radian-software/straight.el][straight.el]]. It
+needs to be disabled before anything else so it will be put into the
+=early-init.el= file.
+#+begin_src elisp :tangle early-init.el
+  ;; Disable Emacs's default package manager
+  (setq package-enable-at-startup nil)
+#+end_src
+
+** straight.el
+After disabling emacs's default package manager, we can proceed to
+install [[https://github.com/radian-software/straight.el][straight.el]].
+#+begin_src elisp :tangle init.el
+  ;; Install and bootstrap straight.el
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+	(bootstrap-version 6))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+	  (url-retrieve-synchronously
+	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	   'silent 'inhibit-cookies)
+	(goto-char (point-max))
+	(eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+#+end_src
+
+** use-package
+We can also enable the [[https://github.com/jwiegley/use-package][use-package]] macro which provides us with a
+convenient syntax to configure emacs. Since we already added
+[[https://github.com/radian-software/straight.el][straight.el]] we can easily integrate it. I also want [[https://github.com/jwiegley/use-package][use-package]] to use
+sources from straight by default.
+#+begin_src elisp :tangle init.el
+  ;; Install use-package using straight.el
+  (straight-use-package 'use-package)
+  ;; Configure use-package to use straight.el by default
+  (use-package straight
+    :custom
+    (straight-use-package-by-default t))
+#+end_src
+
+* User Interface
+Below are all code snippets regarding the customization of the
+graphical user interface.
+
+** Font
+I like to use the [[https://www.programmingfonts.org/#fantasque-sans][Fantasque Sans Mono]] nerd font.
+#+begin_src elisp :tangle init.el
+  ;; Set the default font
+  (set-frame-font "FantasqueSansM Nerd Font Mono-11" nil t)
+#+end_src
+
+** GUI
+Remove all the annoying bars and window decorations that are around
+the emacs buffer.
+#+begin_src elisp :tangle init.el
+  ;; Remove annoying GUI elements
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+#+end_src
+
+** Theme
+I use the [[https://monokai.pro/][Monokai Pro]] theme from the [[https://github.com/doomemacs/themes][doom emacs theme collection]].
+#+begin_src elisp :tangle init.el
+  (use-package doom-themes
+    :ensure t
+    :config
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+	  doom-themes-enable-italic t) ; if nil, italics is universally disabled
+    (load-theme 'doom-monokai-pro t)
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+    ;; Change the treemacs colors
+    (setq doom-themes-treemacs-theme "doom-atom")
+    (doom-themes-treemacs-config)
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config))
+
+#+end_src
+
+** org-bullets
+I want the bullet points in org-mode to look and be sized,
+differently. Therefore I use [[https://github.com/sabof/org-bullets][org-bullets]] to change them.
+#+begin_src elisp :tangle init.el
+  ;; Show org-mode bullets as UTF-8 charactersx
+  (use-package org-bullets
+    :ensure t
+    :custom
+    (org-bullets-bullet-list '("▸" "■" "◈" "◉" "◊"))
+    :config
+    (custom-set-faces
+    '(org-level-1 ((t (:inherit outline-1 :height 2.0))))
+    '(org-level-2 ((t (:inherit outline-2 :height 1.5))))
+    '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
+    '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
+    '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+#+end_src
+
+* Packages
+
+** Magit
+[[https://magit.vc/][Magit]] enables git integration inside of emacs. You can open the main
+menu of [[https://github.com/magit/magit][magit]] inside a project with a =.git= directory.
+#+begin_src elisp :tangle init.el
+  (use-package magit
+    :ensure t
+    :bind
+    ("C-x g" . magit-status)
+    ("C-x M-g" . magit-dispatch)
+    ("C-c M-g" . magit-file-dispatch))
+#+end_src
+
+** Org Mode
+#+begin_src elisp :tangle init.el
+  ;; Configure org-mode and it's sub functions
+  (use-package org
+    :straight (:type built-in)
+    :bind ("C-c a" . org-agenda)
+    :config
+    ;; Add my notes to the org-agenda
+    (defun org-agenda-files (&rest _)
+      (directory-files-recursively "~/docs/notes" org-agenda-file-regexp)))
+
+#+end_src
+** Org Roam
+
+#+begin_src elisp :tangle init.el
+  ;; Build a second brain inside of
+  ;; Emacs with Org Roam
+  (use-package org-roam
+    :ensure t
+    :init
+    (setq org-roam-v2-ack t)
+    :custom
+    (org-roam-directory "~/docs/notes/")
+    (org-roam-completion-everywhere t)
+    (org-roam-dailies-capture-templates
+     '(("d" "default" entry "* %<%I:%M %p>: %?"
+	:if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+	   ("C-c n f" . org-roam-node-find)
+	   ("C-c n i" . org-roam-node-insert)
+	   :map org-mode-map
+	   ("C-M-i" . completion-at-point)
+	   :map org-roam-dailies-map
+	   ("Y" . org-roam-dailies-capture-yesterday)
+	   ("T" . org-roam-dailies-capture-tomorrow))
+    :bind-keymap
+    ("C-c n d" . org-roam-dailies-map)
+    :config
+    (require 'org-roam-dailies) ;; Ensure the keymap is available
+    (org-roam-db-autosync-mode))
+#+end_src
+
+* Misc
+** Backup and Autosave files
+Emacs leaves some files around and 'contaminates' the directories
+being worked on. I don't like this behavior, so we just move these
+files into subdirs in the main emacs directory.
+#+begin_src elisp :tangle early-init.el
+    ;; Move backup and autosave files to
+    ;; their respective subdirectories
+    (setq backup-directory-alist
+	  `((".*" . ,"~/.emacs.d/backups")))
+    (setq auto-save-file-name-transforms
+	  `((".*" ,"~/.emacs.d/auto-saves" t)))
+    ;; Set the auto save timeout interval to a lower value
+    (setq auto-save-timeout 10
+	  auto-save-interval 150)
+#+end_src
+
