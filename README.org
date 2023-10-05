@@ -9,12 +9,15 @@ in general.
 [[file:.screenshots/emacs-screenshot.png]]
 
 * Getting Started
+
+** Default approach
 You can install this configuration by copying =init.el= and
 =early-init.el= to the default emacs directory.
 #+begin_src sh
   cp ./init.el ./early-init.el ~/.emacs.d/
 #+end_src
 
+** Alternative approach
 Alternatively, you can use the configuration from this exact org file
 by specifiying it in your own =init.el=. It will be evaluated
 automatically from this very file.
