@@ -88,7 +88,6 @@ I use the [[https://monokai.pro/][Monokai Pro]] theme from the [[https://github.
     (doom-themes-treemacs-config)
     ;; Corrects (and improves) org-mode's native fontification.
     (doom-themes-org-config))
-
 #+end_src
 
 ** org-bullets
@@ -111,8 +110,7 @@ differently. Therefore I use [[https://github.com/sabof/org-bullets][org-bullets
 #+end_src
 
 * Packages
-
-** Magit
+** magit
 [[https://magit.vc/][Magit]] enables git integration inside of emacs. You can open the main
 menu of [[https://github.com/magit/magit][magit]] inside a project with a =.git= directory.
 #+begin_src elisp :tangle init.el
@@ -124,7 +122,11 @@ menu of [[https://github.com/magit/magit][magit]] inside a project with a =.git=
     ("C-c M-g" . magit-file-dispatch))
 #+end_src
 
-** Org Mode
+** org-mode
+[[https://orgmode.org/][Org mode]] is a major mode which is perhaps the most powerful feature of
+emacs. It allows you to take notes, organize yourself, compile
+documents to different formats (like pandoc), execute code blocks and
+even more.
 #+begin_src elisp :tangle init.el
   ;; Configure org-mode and it's sub functions
   (use-package org
@@ -134,15 +136,20 @@ menu of [[https://github.com/magit/magit][magit]] inside a project with a =.git=
     ;; Add my notes to the org-agenda
     (defun org-agenda-files (&rest _)
       (directory-files-recursively "~/docs/notes" org-agenda-file-regexp)))
-
 #+end_src
-** Org Roam
 
+** org-roam
+[[https://www.orgroam.com/][Org roam]] is a 'plain-text personal knowledge management system' which
+allows you to make notes and connect them like neurons inside of your
+brain, except it's using org IDs. The notes should be atomic (about
+one topic only and they should fit on one page), just like in the
+note-taking method called [[https://zettelkasten.de/posts/overview/][Zettelkasten]].
 #+begin_src elisp :tangle init.el
-  ;; Build a second brain inside of
-  ;; Emacs with Org Roam
+  ;; Install and configure org-roam
+  ;; for personal notes and school
   (use-package org-roam
     :ensure t
+    :after org
     :init
     (setq org-roam-v2-ack t)
     :custom
@@ -164,6 +171,46 @@ menu of [[https://github.com/magit/magit][magit]] inside a project with a =.git=
     :config
     (require 'org-roam-dailies) ;; Ensure the keymap is available
     (org-roam-db-autosync-mode))
+#+end_src
+
+** all-the-icons
+[[https://github.com/domtronn/all-the-icons.el][All the icons]] is a helper package for emacs which installs icon fonts
+for you. Some packages in this config use all-the-icons so we need to
+download it and set it up.
+#+begin_src elisp :tangle init.el
+  (use-package all-the-icons
+    :config
+    (all-the-icons-install-fonts t))
+#+end_src
+
+** which-key
+[[https://github.com/justbur/emacs-which-key][Which key]] is a minor mode for emacs which displays a buffer with the
+/following/ keybindings, after starting a key sequence.
+#+begin_src elisp :tangle init.el
+  (use-package which-key
+    :config
+    (which-key-setup-minibuffer)
+    (which-key-mode))
+#+end_src
+
+** LSP Mode
+Emacs doesn't have great autocompletion for programming languages. To
+mitigate that, I use [[https://github.com/emacs-lsp/lsp-mode][LSP Mode]]. One of the programming languages I use
+a lot is Java.
+#+begin_src elisp :tangle init.el
+  (use-package projectile)
+  (use-package flycheck)
+  (use-package yasnippet :config (yas-global-mode))
+  (use-package lsp-mode :hook ((lsp-mode . lsp-enable-which-key-integration)))
+  (use-package hydra)
+  (use-package company)
+  (use-package lsp-ui)
+  (use-package lsp-java :config (add-hook 'java-mode-hook 'lsp))
+  (use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
+  (use-package helm-lsp)
+  (use-package helm
+    :config (helm-mode))
+  (use-package lsp-treemacs)
 #+end_src
 
 * Misc
