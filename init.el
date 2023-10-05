@@ -72,10 +72,11 @@
   (defun org-agenda-files (&rest _)
     (directory-files-recursively "~/docs/notes" org-agenda-file-regexp)))
 
-;; Build a second brain inside of
-;; Emacs with Org Roam
+;; Install and configure org-roam
+;; for personal notes and school
 (use-package org-roam
   :ensure t
+  :after org
   :init
   (setq org-roam-v2-ack t)
   :custom
@@ -98,7 +99,14 @@
   (require 'org-roam-dailies) ;; Ensure the keymap is available
   (org-roam-db-autosync-mode))
 
-(use-package all-the-icons)
+(use-package all-the-icons
+  :config
+  (all-the-icons-install-fonts t))
+
+(use-package which-key
+  :config
+  (which-key-setup-minibuffer)
+  (which-key-mode))
 
 (use-package projectile)
 (use-package flycheck)
@@ -107,7 +115,6 @@
 (use-package hydra)
 (use-package company)
 (use-package lsp-ui)
-(use-package which-key :config (which-key-mode))
 (use-package lsp-java :config (add-hook 'java-mode-hook 'lsp))
 (use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
 (use-package helm-lsp)
