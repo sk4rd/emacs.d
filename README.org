@@ -7,10 +7,7 @@ this config mostly for school but also for programming and daily notes
 in general.
 
 [[file:.screenshots/emacs-screenshot.png]]
-
-* Getting Started
-
-** Default approach
+ Started
 You can install this configuration by copying =init.el= and
 =early-init.el= to the default emacs directory.
 #+begin_src sh
@@ -162,6 +159,8 @@ even more.
   (use-package org
     :straight (:type built-in)
     :bind ("C-c a" . org-agenda)
+    :custom
+    (org-attach-use-inheritance t)
     :config
     ;; Add my notes to the org-agenda
     (defun org-agenda-files (&rest _)
@@ -203,6 +202,23 @@ note-taking method called [[https://zettelkasten.de/posts/overview/][Zettelkaste
     (org-roam-db-autosync-mode))
 #+end_src
 
+** org-roam-ui
+Visualizing notes is a key concept I like to follow in learning. I use
+[[https://github.com/org-roam/org-roam-ui][org-roam-ui]] to view my notes as a kind of 'neural network' in my
+browser. It spawns an http server inside of emacs and opens it in your
+default browser.
+#+begin_src elisp :tangle init.el
+  (use-package org-roam-ui
+    :straight
+      (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+      :after org-roam
+      :config
+      (setq org-roam-ui-sync-theme t
+	    org-roam-ui-follow t
+	    org-roam-ui-update-on-save t
+	    org-roam-ui-open-on-start t))
+#+end_src
+
 ** all-the-icons
 [[https://github.com/domtronn/all-the-icons.el][All the icons]] is a helper package for emacs which installs icon fonts
 for you. Some packages in this config use all-the-icons so we need to
@@ -223,7 +239,7 @@ download it and set it up.
     (which-key-mode))
 #+end_src
 
-** LSP Mode
+** lsp-mode
 Emacs doesn't have great autocompletion for programming languages. To
 mitigate that, I use [[https://github.com/emacs-lsp/lsp-mode][LSP Mode]]. One of the programming languages I use
 a lot is Java.

@@ -67,6 +67,8 @@
 (use-package org
   :straight (:type built-in)
   :bind ("C-c a" . org-agenda)
+  :custom
+  (org-attach-use-inheritance t)
   :config
   ;; Add my notes to the org-agenda
   (defun org-agenda-files (&rest _)
@@ -98,6 +100,16 @@
   :config
   (require 'org-roam-dailies) ;; Ensure the keymap is available
   (org-roam-db-autosync-mode))
+
+(use-package org-roam-ui
+  :straight
+    (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+    :after org-roam
+    :config
+    (setq org-roam-ui-sync-theme t
+	  org-roam-ui-follow t
+	  org-roam-ui-update-on-save t
+	  org-roam-ui-open-on-start t))
 
 (use-package all-the-icons
   :config
