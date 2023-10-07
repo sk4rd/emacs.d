@@ -18,6 +18,7 @@
 (use-package straight
   :custom
   (straight-use-package-by-default t))
+(setq use-package-always-ensure t)
 
 ;; Set the default font
 (set-frame-font "FantasqueSansM Nerd Font Mono-11" nil t)
@@ -28,7 +29,6 @@
 (scroll-bar-mode -1)
 
 (use-package doom-themes
-  :ensure t
   :config
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
@@ -44,7 +44,6 @@
 
 ;; Show org-mode bullets as UTF-8 charactersx
 (use-package org-bullets
-  :ensure t
   :custom
   (org-bullets-bullet-list '("▸" "■" "◈" "◉" "◊"))
   :config
@@ -57,7 +56,6 @@
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 (use-package magit
-  :ensure t
   :bind
   ("C-x g" . magit-status)
   ("C-x M-g" . magit-dispatch)
@@ -77,7 +75,6 @@
 ;; Install and configure org-roam
 ;; for personal notes and school
 (use-package org-roam
-  :ensure t
   :after org
   :init
   (setq org-roam-v2-ack t)
@@ -114,6 +111,9 @@
 (use-package all-the-icons
   :config
   (all-the-icons-install-fonts t))
+
+(use-package all-the-icons-dired
+  :hook dired-mode-hook)
 
 (use-package which-key
   :config

@@ -7,21 +7,20 @@ this config mostly for school but also for programming and daily notes
 in general.
 
 [[file:.screenshots/emacs-screenshot.png]]
- Started
+
 You can install this configuration by copying =init.el= and
 =early-init.el= to the default emacs directory.
 #+begin_src sh
-  cp ./init.el ./early-init.el ~/.emacs.d/
+  cp ./emacs.d/init.el ./emacs.d/early-init.el ~/.emacs.d/
 #+end_src
 
 ** Alternative approach
-Alternatively, you can use the configuration from this exact org file
-by specifiying it in your own =init.el=. It will be evaluated
-automatically from this very file.
+Alternatively, you can use the org file directly by specifiying it's
+load path in your own =init.el=.
 
 Start by copying =README.org= into your default emacs directory.
 #+begin_src sh
-  cp ./README.org ~/.emacs.d/
+  cp ./emacs.d/README.org ~/.emacs.d/
 #+end_src
 
 Then you need to put the following into your =init.el=.
@@ -75,6 +74,7 @@ sources from straight by default.
   (use-package straight
     :custom
     (straight-use-package-by-default t))
+  (setq use-package-always-ensure t)
 #+end_src
 
 * User Interface
@@ -102,7 +102,6 @@ the emacs buffer.
 I use the [[https://monokai.pro/][Monokai Pro]] theme from the [[https://github.com/doomemacs/themes][doom emacs theme collection]].
 #+begin_src elisp :tangle init.el
   (use-package doom-themes
-    :ensure t
     :config
     ;; Global settings (defaults)
     (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
@@ -123,7 +122,6 @@ differently. Therefore I use [[https://github.com/sabof/org-bullets][org-bullets
 #+begin_src elisp :tangle init.el
   ;; Show org-mode bullets as UTF-8 charactersx
   (use-package org-bullets
-    :ensure t
     :custom
     (org-bullets-bullet-list '("▸" "■" "◈" "◉" "◊"))
     :config
@@ -142,7 +140,6 @@ differently. Therefore I use [[https://github.com/sabof/org-bullets][org-bullets
 menu of [[https://github.com/magit/magit][magit]] inside a project with a =.git= directory.
 #+begin_src elisp :tangle init.el
   (use-package magit
-    :ensure t
     :bind
     ("C-x g" . magit-status)
     ("C-x M-g" . magit-dispatch)
@@ -177,7 +174,6 @@ note-taking method called [[https://zettelkasten.de/posts/overview/][Zettelkaste
   ;; Install and configure org-roam
   ;; for personal notes and school
   (use-package org-roam
-    :ensure t
     :after org
     :init
     (setq org-roam-v2-ack t)
@@ -227,6 +223,12 @@ download it and set it up.
   (use-package all-the-icons
     :config
     (all-the-icons-install-fonts t))
+#+end_src
+
+** all-the-icons-dired
+#+begin_src elisp :tangle init.el
+  (use-package all-the-icons-dired
+    :hook (dired-mode-hook .  all-the-icons-dired-mode))
 #+end_src
 
 ** which-key
