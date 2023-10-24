@@ -8,7 +8,6 @@ in general.
 
 [[file:.screenshots/emacs-screenshot.png]]
 
-
 * Installation
 You can install this configuration by copying =init.el= and
 =early-init.el= to the default emacs directory.
@@ -16,6 +15,7 @@ You can install this configuration by copying =init.el= and
   cp ./emacs.d/init.el ./emacs.d/early-init.el ~/.emacs.d/
 #+end_src
 
+** Alternative approach
 Alternatively, you can use the org file directly by specifiying it's
 load path in your own =init.el=.
 
@@ -32,10 +32,12 @@ Then you need to put the following into your =init.el=.
 		     user-emacs-directory))
 #+end_src
 
-You need to install the =FantasqueSansMono Nerd Font= for the correct
-font display.
+** Dependencies
+You need to install the =FantasqueSansMono Nerd Font= to display the
+correct font.
 
-Remember to [[*all-the-icons][install the missing icons]] upon the initial start.
+Remember to also install the missing icons by running =M-x
+all-the-icons-install-fonts=, upon your first emacs launch.
 
 * Package Management
 
