@@ -108,28 +108,26 @@
 	  org-roam-ui-update-on-save t
 	  org-roam-ui-open-on-start t))
 
-(use-package all-the-icons
-  :config
-  (all-the-icons-install-fonts t))
+(use-package all-the-icons)
 
 (use-package all-the-icons-dired
-  :hook dired-mode-hook)
+  :config
+  :hook (dired-mode . (lambda ()
+			(interactive)
+			(unless (file-remote-p default-directory)
+			  (all-the-icons-dired-mode)))))
+
+(use-package dired-subtree
+  :config
+  (advice-add 'dired-subtree-toggle :after (lambda ()
+					     (interactive)
+					     (when all-the-icons-dired-mode
+					       (revert-buffer)))))
 
 (use-package which-key
   :config
   (which-key-setup-minibuffer)
   (which-key-mode))
 
-(use-package projectile)
-(use-package flycheck)
-(use-package yasnippet :config (yas-global-mode))
-(use-package lsp-mode :hook ((lsp-mode . lsp-enable-which-key-integration)))
-(use-package hydra)
-(use-package company)
-(use-package lsp-ui)
-(use-package lsp-java :config (add-hook 'java-mode-hook 'lsp))
-(use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
-(use-package helm-lsp)
 (use-package helm
   :config (helm-mode))
-(use-package lsp-treemacs)

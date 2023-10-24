@@ -1,5 +1,5 @@
 #+title: Sk4rd's Emacs Configuration
-#+options: num:nil
+#+options: num:nil toc:nil
 #+property: header-args :results silent
 
 This is my personal emacs configuration inside of an org file. I use
@@ -8,13 +8,14 @@ in general.
 
 [[file:.screenshots/emacs-screenshot.png]]
 
+
+* Installation
 You can install this configuration by copying =init.el= and
 =early-init.el= to the default emacs directory.
 #+begin_src sh
   cp ./emacs.d/init.el ./emacs.d/early-init.el ~/.emacs.d/
 #+end_src
 
-** Alternative approach
 Alternatively, you can use the org file directly by specifiying it's
 load path in your own =init.el=.
 
@@ -31,6 +32,11 @@ Then you need to put the following into your =init.el=.
 		     user-emacs-directory))
 #+end_src
 
+You need to install the =FantasqueSansMono Nerd Font= for the correct
+font display.
+
+Remember to [[*all-the-icons][install the missing icons]] upon the initial start.
+
 * Package Management
 
 ** package.el
@@ -45,7 +51,9 @@ needs to be disabled before anything else so it will be put into the
 
 ** straight.el
 After disabling emacs's default package manager, we can proceed to
-install [[https://github.com/radian-software/straight.el][straight.el]].
+install [[https://github.com/radian-software/straight.el][straight.el]]. It is a package manager for emacs which directly
+clones the remote git repository and builds it for you. It has good
+[[https://github.com/jwiegley/use-package][use-package]] integration.
 #+begin_src elisp :tangle init.el
   ;; Install and bootstrap straight.el
   (defvar bootstrap-version)
@@ -164,6 +172,14 @@ even more.
       (directory-files-recursively "~/docs/notes" org-agenda-file-regexp)))
 #+end_src
 
+** project
+#+begin_src elisp
+  (use-package project
+    :straight (:type built-in)
+    :config
+    (project-remember-projects-under "~/docs/projects" t))
+#+end_src
+
 ** org-roam
 [[https://www.orgroam.com/][Org roam]] is a 'plain-text personal knowledge management system' which
 allows you to make notes and connect them like neurons inside of your
@@ -220,15 +236,27 @@ default browser.
 for you. Some packages in this config use all-the-icons so we need to
 download it and set it up.
 #+begin_src elisp :tangle init.el
-  (use-package all-the-icons
-    :config
-    (all-the-icons-install-fonts t))
+  (use-package all-the-icons)
 #+end_src
+
+You will need to run =M-x all-the-icons-install-fonts=, in order to
+install all the missing fonts.
 
 ** all-the-icons-dired
 #+begin_src elisp :tangle init.el
   (use-package all-the-icons-dired
-    :hook (dired-mode-hook .  all-the-icons-dired-mode))
+    :config
+    :hook (dired-mode . (lambda ()
+			  (interactive)
+			  (unless (file-remote-p default-directory)
+			    (all-the-icons-dired-mode)))))
+
+  (use-package dired-subtree
+    :config
+    (advice-add 'dired-subtree-toggle :after (lambda ()
+					       (interactive)
+					       (when all-the-icons-dired-mode
+						 (revert-buffer)))))
 #+end_src
 
 ** which-key
@@ -241,24 +269,12 @@ download it and set it up.
     (which-key-mode))
 #+end_src
 
-** lsp-mode
-Emacs doesn't have great autocompletion for programming languages. To
-mitigate that, I use [[https://github.com/emacs-lsp/lsp-mode][LSP Mode]]. One of the programming languages I use
-a lot is Java.
+** helm-mode
+Helm mode is an auto completion layer for emacs searches. I find it
+very useful.
 #+begin_src elisp :tangle init.el
-  (use-package projectile)
-  (use-package flycheck)
-  (use-package yasnippet :config (yas-global-mode))
-  (use-package lsp-mode :hook ((lsp-mode . lsp-enable-which-key-integration)))
-  (use-package hydra)
-  (use-package company)
-  (use-package lsp-ui)
-  (use-package lsp-java :config (add-hook 'java-mode-hook 'lsp))
-  (use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
-  (use-package helm-lsp)
   (use-package helm
     :config (helm-mode))
-  (use-package lsp-treemacs)
 #+end_src
 
 * Misc
