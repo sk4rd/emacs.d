@@ -33,12 +33,9 @@
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
 	doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-monokai-pro t)
+  (load-theme 'doom-gruvbox t)
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
-  ;; Change the treemacs colors
-  (setq doom-themes-treemacs-theme "doom-atom")
-  (doom-themes-treemacs-config)
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
@@ -48,11 +45,11 @@
   (org-bullets-bullet-list '("▸" "■" "◈" "◉" "◊"))
   :config
   (custom-set-faces
-  '(org-level-1 ((t (:inherit outline-1 :height 2.0))))
-  '(org-level-2 ((t (:inherit outline-2 :height 1.5))))
-  '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
-  '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
-  '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
+   '(org-level-1 ((t (:inherit outline-1 :height 2.0))))
+   '(org-level-2 ((t (:inherit outline-2 :height 1.5))))
+   '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
+   '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
+   '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 (use-package magit
@@ -111,7 +108,6 @@
 (use-package all-the-icons)
 
 (use-package all-the-icons-dired
-  :config
   :hook (dired-mode . (lambda ()
 			(interactive)
 			(unless (file-remote-p default-directory)
@@ -122,7 +118,8 @@
   (advice-add 'dired-subtree-toggle :after (lambda ()
 					     (interactive)
 					     (when all-the-icons-dired-mode
-					       (revert-buffer)))))
+					       (revert-buffer))))
+  (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map))
 
 (use-package which-key
   :config

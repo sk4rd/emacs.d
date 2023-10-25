@@ -109,19 +109,16 @@ the emacs buffer.
 #+end_src
 
 ** Theme
-I use the [[https://monokai.pro/][Monokai Pro]] theme from the [[https://github.com/doomemacs/themes][doom emacs theme collection]].
+I use the gruvbox theme from the [[https://github.com/doomemacs/themes][doom emacs theme collection]].
 #+begin_src elisp :tangle init.el
   (use-package doom-themes
     :config
     ;; Global settings (defaults)
     (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
 	  doom-themes-enable-italic t) ; if nil, italics is universally disabled
-    (load-theme 'doom-monokai-pro t)
+    (load-theme 'doom-gruvbox t)
     ;; Enable flashing mode-line on errors
     (doom-themes-visual-bell-config)
-    ;; Change the treemacs colors
-    (setq doom-themes-treemacs-theme "doom-atom")
-    (doom-themes-treemacs-config)
     ;; Corrects (and improves) org-mode's native fontification.
     (doom-themes-org-config))
 #+end_src
@@ -136,11 +133,11 @@ differently. Therefore I use [[https://github.com/sabof/org-bullets][org-bullets
     (org-bullets-bullet-list '("▸" "■" "◈" "◉" "◊"))
     :config
     (custom-set-faces
-    '(org-level-1 ((t (:inherit outline-1 :height 2.0))))
-    '(org-level-2 ((t (:inherit outline-2 :height 1.5))))
-    '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
-    '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
-    '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
+     '(org-level-1 ((t (:inherit outline-1 :height 2.0))))
+     '(org-level-2 ((t (:inherit outline-2 :height 1.5))))
+     '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
+     '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
+     '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+end_src
 
@@ -175,6 +172,8 @@ even more.
 #+end_src
 
 ** project
+[[https://github.com/emacs-mirror/emacs/blob/master/lisp/progmodes/project.el][project.el]] helps with quickly accessing your projects which are
+initialized with git. It is now included with Emacs 29 by default.
 #+begin_src elisp
   (use-package project
     :straight (:type built-in)
@@ -245,20 +244,27 @@ You will need to run =M-x all-the-icons-install-fonts=, in order to
 install all the missing fonts.
 
 ** all-the-icons-dired
+[[https://github.com/jtbm37/all-the-icons-dired][all-the-icons-dired]] is a package which adds fancy icons from
+[[https://github.com/domtronn/all-the-icons.el][all-the-icons]] to dired-mode.
 #+begin_src elisp :tangle init.el
   (use-package all-the-icons-dired
-    :config
     :hook (dired-mode . (lambda ()
 			  (interactive)
 			  (unless (file-remote-p default-directory)
 			    (all-the-icons-dired-mode)))))
+#+end_src
 
+** dired-subtree
+[[https://github.com/Fuco1/dired-hacks/tree/master][This package]] lets you view the underlying contents of a directory
+inside of dired-mode.
+#+begin_src elisp :tangle init.el
   (use-package dired-subtree
     :config
     (advice-add 'dired-subtree-toggle :after (lambda ()
 					       (interactive)
 					       (when all-the-icons-dired-mode
-						 (revert-buffer)))))
+						 (revert-buffer))))
+    (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map))
 #+end_src
 
 ** which-key
@@ -272,7 +278,7 @@ install all the missing fonts.
 #+end_src
 
 ** helm-mode
-Helm mode is an auto completion layer for emacs searches. I find it
+[[https://github.com/emacs-helm/helm][Helm mode]] is an auto completion layer for emacs searches. I find it
 very useful.
 #+begin_src elisp :tangle init.el
   (use-package helm
@@ -285,14 +291,14 @@ Emacs leaves some files around and 'contaminates' the directories
 being worked on. I don't like this behavior, so we just move these
 files into subdirs in the main emacs directory.
 #+begin_src elisp :tangle early-init.el
-    ;; Move backup and autosave files to
-    ;; their respective subdirectories
-    (setq backup-directory-alist
-	  `((".*" . ,"~/.emacs.d/backups")))
-    (setq auto-save-file-name-transforms
-	  `((".*" ,"~/.emacs.d/auto-saves" t)))
-    ;; Set the auto save timeout interval to a lower value
-    (setq auto-save-timeout 10
-	  auto-save-interval 150)
+  ;; Move backup and autosave files to
+  ;; their respective subdirectories
+  (setq backup-directory-alist
+	`((".*" . ,"~/.emacs.d/backups")))
+  (setq auto-save-file-name-transforms
+	`((".*" ,"~/.emacs.d/auto-saves" t)))
+  ;; Set the auto save timeout interval to a lower value
+  (setq auto-save-timeout 10
+	auto-save-interval 150)
 #+end_src
 
