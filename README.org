@@ -6,7 +6,11 @@ This is my personal emacs configuration inside of an org file. I use
 this config mostly for school but also for programming and daily notes
 in general.
 
-[[file:.screenshots/emacs-screenshot.png]]
+[[file:.preview/startup-screen.png]]
+
+[[file:.preview/dired.png]]
+
+[[file:.preview/org-file.png]]
 
 * Installation
 You can install this configuration by copying =init.el= and
