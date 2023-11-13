@@ -10,3 +10,6 @@
 ;; Set the auto save timeout interval to a lower value
 (setq auto-save-timeout 10
       auto-save-interval 150)
+
+;; Disable annyoing warnings
+(setq warning-minimum-level :emergency)

@@ -2,20 +2,17 @@
 #+options: num:nil toc:nil
 #+property: header-args :results silent
 
+[[file:preview.png]]
+
 This is my personal emacs configuration inside of an org file. I use
 this config mostly for school but also for programming and daily notes
 in general.
 
-[[file:.preview/startup-screen.png]]
-
-[[file:.preview/dired.png]]
-
-[[file:.preview/org-file.png]]
-
 * Installation
-You can install this configuration by copying =init.el= and
-=early-init.el= to the default emacs directory.
+You can install this configuration by cloning this repository and
+copying =init.el= and =early-init.el= to the default emacs directory.
 #+begin_src sh
+  git clone https://github.com/sk4rd/emacs.d.git
   cp ./emacs.d/init.el ./emacs.d/early-init.el ~/.emacs.d/
 #+end_src
 
@@ -306,3 +303,9 @@ files into subdirs in the main emacs directory.
 	auto-save-interval 150)
 #+end_src
 
+** Surpress warnings
+Sometimes emacs gives me annoying warning which I disable with:
+#+begin_src elisp :tangle early-init.el
+  ;; Disable annyoing warnings
+  (setq warning-minimum-level :emergency)
+#+end_src
