@@ -11,5 +11,6 @@
 (setq auto-save-timeout 10
       auto-save-interval 150)
 
-;; Disable annyoing warnings
-(setq warning-minimum-level :emergency)
+;; Disable annyoing native-comp warnings
+(setq native-comp-async-report-warnings-errors 'silent)
+(setq warning-suppress-types '((comp)))
