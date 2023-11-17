@@ -128,3 +128,6 @@
 
 (use-package helm
   :config (helm-mode))
+
+(use-package nix-mode
+  :mode "\\.nix\\'")

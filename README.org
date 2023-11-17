@@ -286,6 +286,13 @@ very useful.
     :config (helm-mode))
 #+end_src
 
+** nix-mode
+Nix language support for emacs.
+#+begin_src elisp :tangle init.el
+  (use-package nix-mode
+    :mode "\\.nix\\'")
+#+end_src
+
 * Misc
 ** Backup and Autosave files
 Emacs leaves some files around and 'contaminates' the directories
