@@ -21,7 +21,7 @@
 (setq use-package-always-ensure t)
 
 ;; Set the default font
-(set-frame-font "FantasqueSansM Nerd Font Mono-11" nil t)
+(add-to-list 'default-frame-alist '(font . "Iosevka-14"))
 
 ;; Remove annoying GUI elements
 (menu-bar-mode -1)

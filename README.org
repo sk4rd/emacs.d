@@ -34,8 +34,7 @@ Then you need to put the following into your =init.el=.
 #+end_src
 
 ** Dependencies
-You need to install the =FantasqueSansMono Nerd Font= to display the
-correct font.
+You need to install the =Iosevka= font to display all text correctly.
 
 Remember to also install the missing icons by running =M-x
 all-the-icons-install-fonts=, upon your first emacs launch.
@@ -93,10 +92,10 @@ Below are all code snippets regarding the customization of the
 graphical user interface.
 
 ** Font
-I like to use the [[https://www.programmingfonts.org/#fantasque-sans][Fantasque Sans Mono]] nerd font.
+I like to use the Iosevka font.
 #+begin_src elisp :tangle init.el
   ;; Set the default font
-  (set-frame-font "FantasqueSansM Nerd Font Mono-11" nil t)
+  (add-to-list 'default-frame-alist '(font . "Iosevka-14"))  
 #+end_src
 
 ** GUI
