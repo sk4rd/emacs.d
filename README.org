@@ -95,7 +95,7 @@ graphical user interface.
 I like to use the Iosevka font.
 #+begin_src elisp :tangle init.el
   ;; Set the default font
-  (add-to-list 'default-frame-alist '(font . "Iosevka-14"))  
+  (setq default-frame-alist '((font . "Iosevka-dz-13")))
 #+end_src
 
 ** GUI
