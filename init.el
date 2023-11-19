@@ -21,7 +21,7 @@
 (setq use-package-always-ensure t)
 
 ;; Set the default font
-(setq default-frame-alist '((font . "Iosevka-13")))
+(setq default-frame-alist '((font . "Iosevka-12")))
 
 ;; Remove annoying GUI elements
 (menu-bar-mode -1)
