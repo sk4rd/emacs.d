@@ -69,11 +69,6 @@
   (defun org-agenda-files (&rest _)
     (directory-files-recursively "~/docs/notes" org-agenda-file-regexp)))
 
-(use-package project
-  :straight (:type built-in)
-  :config
-  (project-remember-projects-under "~/docs/projects" t))
-
 ;; Install and configure org-roam
 ;; for personal notes and school
 (use-package org-roam
@@ -137,7 +132,9 @@
 (use-package nix-mode
   :mode "\\.nix\\'")
 
-(use-package projectile)
+(use-package projectile
+  :custom (projectile-project-search-path '("~/docs/projects"))
+  :config (projectile-mode))
 
 (use-package flycheck)
 
@@ -157,8 +154,11 @@
 
 (use-package hydra)
 
-(use-package company)
+(use-package company
+  :straight (:type built-in))
 
-(use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
+(use-package dap-mode
+  :after lsp-mode
+  :config (dap-auto-configure-mode))
 
 (use-package helm-lsp)

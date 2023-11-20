@@ -170,16 +170,6 @@ even more.
       (directory-files-recursively "~/docs/notes" org-agenda-file-regexp)))
 #+end_src
 
-** project
-[[https://github.com/emacs-mirror/emacs/blob/master/lisp/progmodes/project.el][project.el]] helps with quickly accessing your projects which are
-initialized with git. It is now included with Emacs 29 by default.
-#+begin_src elisp
-  (use-package project
-    :straight (:type built-in)
-    :config
-    (project-remember-projects-under "~/docs/projects" t))
-#+end_src
-
 ** org-roam
 [[https://www.orgroam.com/][Org roam]] is a 'plain-text personal knowledge management system' which
 allows you to make notes and connect them like neurons inside of your
@@ -293,7 +283,9 @@ Nix language support for emacs.
 
 ** projectile
 #+begin_src elisp
-  (use-package projectile)
+  (use-package projectile
+    :custom (projectile-project-search-path '("~/docs/projects"))
+    :config (projectile-mode))
 #+end_src
 
 ** flycheck
@@ -337,12 +329,15 @@ Nix language support for emacs.
 
 ** company
 #+begin_src elisp
-  (use-package company)
+  (use-package company
+    :straight (:type built-in))
 #+end_src
 
 ** dap-mode
 #+begin_src elisp
-  (use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
+  (use-package dap-mode
+    :after lsp-mode
+    :config (dap-auto-configure-mode))
 #+end_src
 
 ** helm-lsp
