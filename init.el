@@ -1,3 +1,8 @@
+git clone https://github.com/sk4rd/emacs.d.git
+cp ./emacs.d/init.el ./emacs.d/early-init.el ~/.emacs.d/
+
+cp ./emacs.d/README.org ~/.emacs.d/
+
 ;; Install and bootstrap straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -69,6 +74,11 @@
   (defun org-agenda-files (&rest _)
     (directory-files-recursively "~/docs/notes" org-agenda-file-regexp)))
 
+(use-package project
+  :straight (:type built-in)
+  :config
+  (project-remember-projects-under "~/docs/projects" t))
+
 ;; Install and configure org-roam
 ;; for personal notes and school
 (use-package org-roam
@@ -133,15 +143,27 @@
   :mode "\\.nix\\'")
 
 (use-package projectile)
+
 (use-package flycheck)
-(use-package yasnippet :config (yas-global-mode))
-(use-package lsp-mode :hook ((lsp-mode . lsp-enable-which-key-integration))
+
+(use-package yasnippet
+  :config (yas-global-mode))
+
+(use-package lsp-mode
+  :hook ((lsp-mode . lsp-enable-which-key-integration))
   :config (setq lsp-completion-enable-additional-text-edit nil))
-(use-package hydra)
-(use-package company)
+
 (use-package lsp-ui)
-(use-package lsp-java :config (add-hook 'java-mode-hook 'lsp))
-(use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
-(use-package dap-java :ensure nil)
-(use-package helm-lsp)
+
+(use-package lsp-java
+  :config (add-hook 'java-mode-hook 'lsp))
+
 (use-package lsp-treemacs)
+
+(use-package hydra)
+
+(use-package company)
+
+(use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
+
+(use-package helm-lsp)
