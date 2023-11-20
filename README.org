@@ -11,7 +11,7 @@ in general.
 * Installation
 You can install this configuration by cloning this repository and
 copying =init.el= and =early-init.el= to the default emacs directory.
-#+begin_src sh
+#+begin_src sh :tangle no
   git clone https://github.com/sk4rd/emacs.d.git
   cp ./emacs.d/init.el ./emacs.d/early-init.el ~/.emacs.d/
 #+end_src
@@ -21,7 +21,7 @@ Alternatively, you can use the org file directly by specifiying it's
 load path in your own =init.el=.
 
 Start by copying =README.org= into your default emacs directory.
-#+begin_src sh
+#+begin_src sh :tangle no
   cp ./emacs.d/README.org ~/.emacs.d/
 #+end_src
 

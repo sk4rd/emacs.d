@@ -1,8 +1,3 @@
-git clone https://github.com/sk4rd/emacs.d.git
-cp ./emacs.d/init.el ./emacs.d/early-init.el ~/.emacs.d/
-
-cp ./emacs.d/README.org ~/.emacs.d/
-
 ;; Install and bootstrap straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
