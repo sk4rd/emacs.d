@@ -329,8 +329,7 @@ Nix language support for emacs.
 
 ** company
 #+begin_src elisp
-  (use-package company
-    :straight (:type built-in))
+  (use-package company)
 #+end_src
 
 ** dap-mode

@@ -154,8 +154,7 @@
 
 (use-package hydra)
 
-(use-package company
-  :straight (:type built-in))
+(use-package company)
 
 (use-package dap-mode
   :after lsp-mode
