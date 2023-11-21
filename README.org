@@ -24,10 +24,24 @@ in general.
   - [[#bars][Bars]]
   - [[#line-numbers][Line Numbers]]
   - [[#theme][Theme]]
-  - [[#org-mode-bullets][Org-Mode Bullets]]
   - [[#icons][Icons]]
   - [[#icons-in-dired][Icons in Dired]]
-- [[#packages][Packages]]
+- [[#org-mode][Org Mode]]
+  - [[#org][Org]]
+  - [[#bullets][Bullets]]
+  - [[#roam][Roam]]
+  - [[#roam-ui][Roam UI]]
+- [[#lsp-mode][LSP Mode]]
+  - [[#lsp-mode][LSP]]
+  - [[#lsp-ui][LSP UI]]
+  - [[#lsp-java][Java]]
+  - [[#lsp-nix][Nix]]
+  - [[#lsp-treemacs][Treemacs]]
+  - [[#lsp-helm][Helm]]
+- [[#coding-languages][Coding Languages]]
+  - [[#java][Java]]
+  - [[#nix][Nix]]
+- [[#other][Other]]
 - [[#miscellaneous][Miscellaneous]]
   - [[#backup-and-autosave-files][Backup and Autosave files]]
   - [[#surpress-native-comp-warnings][Surpress native-comp warnings]]
@@ -193,23 +207,6 @@ eye-friendly color scheme.
     (doom-themes-org-config))
 #+end_src
 
-** Org-Mode Bullets
-I want the bullet points in org-mode to look and be sized,
-differently. Therefore I use [[https://github.com/sabof/org-bullets][org-bullets]] to change them.
-#+begin_src elisp
-  (use-package org-bullets
-    :custom
-    (org-bullets-bullet-list '("●" "◉" "◆" "◈" "▼")) ; Custom bullet points for org headings
-    :custom-face
-    (org-level-1 ((t (:inherit outline-1 :height 2.0)))) ; Larger font for top-level headings
-    (org-level-2 ((t (:inherit outline-2 :height 1.5)))) ; Medium font for second-level headings
-    (org-level-3 ((t (:inherit outline-3 :height 1.2)))) ; Slightly larger font for third-level headings
-    (org-level-4 ((t (:inherit outline-4 :height 1.0)))) ; Default font for fourth-level headings
-    (org-level-5 ((t (:inherit outline-5 :height 1.0)))) ; Default font for fifth-level headings
-    :hook
-    (org-mode . org-bullets-mode)) ; Enable org-bullets-mode automatically in org-mode
-#+end_src
-
 ** Icons
 To make Emacs more sleek, I use the [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] package, which
 provides a rich set of icon fonts. It's especially useful since
@@ -246,7 +243,7 @@ directories simple and clean.
 #+end_src
 
 * Org Mode
-** org-mode
+** Org
 [[https://orgmode.org/][Org mode]] is one of the most powerful features of Emacs, allowing for note-taking,
 organization, document compilation, code execution, and more.
 #+begin_src elisp
@@ -260,7 +257,24 @@ organization, document compilation, code execution, and more.
     (setq org-agenda-files (directory-files-recursively "~/docs/notes" "\\.org$")))
 #+end_src
 
-** org-roam
+** Bullets
+I want the bullet points in org-mode to look and be sized,
+differently. Therefore I use [[https://github.com/sabof/org-bullets][org-bullets]] to change them.
+#+begin_src elisp
+  (use-package org-bullets
+    :custom
+    (org-bullets-bullet-list '("●" "◉" "◆" "◈" "▼")) ; Custom bullet points for org headings
+    :custom-face
+    (org-level-1 ((t (:inherit outline-1 :height 2.0)))) ; Larger font for top-level headings
+    (org-level-2 ((t (:inherit outline-2 :height 1.5)))) ; Medium font for second-level headings
+    (org-level-3 ((t (:inherit outline-3 :height 1.2)))) ; Slightly larger font for third-level headings
+    (org-level-4 ((t (:inherit outline-4 :height 1.0)))) ; Default font for fourth-level headings
+    (org-level-5 ((t (:inherit outline-5 :height 1.0)))) ; Default font for fifth-level headings
+    :hook
+    (org-mode . org-bullets-mode)) ; Enable org-bullets-mode automatically in org-mode
+#+end_src
+
+** Roam
 [[https://www.orgroam.com/][Org roam]] is a 'plain-text personal knowledge management system' which
 allows you to make notes and connect them like neurons inside of your
 brain, except it's using org IDs. The notes should be atomic (about
@@ -292,7 +306,7 @@ note-taking method called [[https://zettelkasten.de/posts/overview/][Zettelkaste
     (org-roam-db-autosync-mode))  ; Enable automatic syncing of the org-roam database
 #+end_src
 
-** org-roam-ui
+** Roam UI
 Visualizing notes is a key concept I like to follow in learning. I use
 [[https://github.com/org-roam/org-roam-ui][org-roam-ui]] to view my notes as a kind of 'neural network' in my
 browser. It spawns an http server inside of emacs and opens it in your
@@ -310,7 +324,7 @@ default browser.
 #+end_src
 
 * LSP Mode
-** lsp-mode
+** LSP
 #+begin_src elisp
   (use-package lsp-mode
     :hook ((lsp-mode . lsp-enable-which-key-integration))
@@ -318,18 +332,18 @@ default browser.
     (setq lsp-completion-enable-additional-text-edit nil))
 #+end_src
 
-** lsp-ui
+** LSP UI
 #+begin_src elisp
   (use-package lsp-ui)
 #+end_src
 
-** lsp-java
+** LSP Java
 #+begin_src elisp
   (use-package lsp-java
     :config (add-hook 'java-mode-hook 'lsp))
 #+end_src
 
-** lsp-nix
+** LSP Nix
 #+begin_src elisp
   (use-package lsp-nix
     :straight (lsp-nix :type git :host github :repo "oxalica/nil")
@@ -339,19 +353,18 @@ default browser.
     (lsp-nix-nil-formatter ["nixpkgs-fmt"]))
 #+end_src
 
-** lsp-treemacs
+** LSP Treemacs
 #+begin_src elisp
   (use-package lsp-treemacs)
 #+end_src
 
-** helm-lsp
+** LSP Helm
 #+begin_src elisp
   (use-package helm-lsp)
 #+end_src
 
-
 * Coding Languages
-** java-mode
+** Java
 #+begin_src elisp
   (use-package java-mode
     :straight (:type built-in)
@@ -363,14 +376,13 @@ default browser.
                          (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))))
 #+end_src
 
-** nix-mode
+** Nix
 Nix language support for emacs.
 #+begin_src elisp
   (use-package nix-mode
     :mode "\\.nix\\'"
     :hook (nix-mode . lsp-deferred))
 #+end_src
-
 
 * Other
 ** magit

@@ -48,18 +48,6 @@
   (doom-themes-visual-bell-config)
   (doom-themes-org-config))
 
-(use-package org-bullets
-  :custom
-  (org-bullets-bullet-list '("●" "◉" "◆" "◈" "▼")) ; Custom bullet points for org headings
-  :custom-face
-  (org-level-1 ((t (:inherit outline-1 :height 2.0)))) ; Larger font for top-level headings
-  (org-level-2 ((t (:inherit outline-2 :height 1.5)))) ; Medium font for second-level headings
-  (org-level-3 ((t (:inherit outline-3 :height 1.2)))) ; Slightly larger font for third-level headings
-  (org-level-4 ((t (:inherit outline-4 :height 1.0)))) ; Default font for fourth-level headings
-  (org-level-5 ((t (:inherit outline-5 :height 1.0)))) ; Default font for fifth-level headings
-  :hook
-  (org-mode . org-bullets-mode)) ; Enable org-bullets-mode automatically in org-mode
-
 (use-package all-the-icons
   :if (display-graphic-p)
   :config
@@ -87,6 +75,18 @@
   :config
   ;; Dynamically set org-agenda files from my notes directory
   (setq org-agenda-files (directory-files-recursively "~/docs/notes" "\\.org$")))
+
+(use-package org-bullets
+  :custom
+  (org-bullets-bullet-list '("●" "◉" "◆" "◈" "▼")) ; Custom bullet points for org headings
+  :custom-face
+  (org-level-1 ((t (:inherit outline-1 :height 2.0)))) ; Larger font for top-level headings
+  (org-level-2 ((t (:inherit outline-2 :height 1.5)))) ; Medium font for second-level headings
+  (org-level-3 ((t (:inherit outline-3 :height 1.2)))) ; Slightly larger font for third-level headings
+  (org-level-4 ((t (:inherit outline-4 :height 1.0)))) ; Default font for fourth-level headings
+  (org-level-5 ((t (:inherit outline-5 :height 1.0)))) ; Default font for fifth-level headings
+  :hook
+  (org-mode . org-bullets-mode)) ; Enable org-bullets-mode automatically in org-mode
 
 ;; Configure org-roam for personal knowledge management
 (use-package org-roam
