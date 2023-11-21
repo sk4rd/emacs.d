@@ -14,3 +14,9 @@
 ;; Disable annyoing native-comp warnings
 (setq native-comp-async-report-warnings-errors 'silent)
 (setq warning-suppress-types '((comp)))
+
+;; Tell the user a fortune on start-up
+(setq initial-buffer-choice t)
+(when (executable-find "fortune")
+  (setq initial-scratch-message
+        (concat (shell-command-to-string "fortune") "\n\n")))
