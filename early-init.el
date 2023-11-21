@@ -19,7 +19,7 @@
 (setq initial-buffer-choice t)
 (when (executable-find "fortune")
   (let ((fortune-output (shell-command-to-string "fortune")))
-    (setq initial-scratch-message 
-          (concat ";; " 
+    (setq initial-scratch-message
+          (concat ";; "
                   (replace-regexp-in-string "\n" "\n;; " fortune-output)
                   "\n\n"))))

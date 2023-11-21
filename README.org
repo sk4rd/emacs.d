@@ -10,6 +10,13 @@ in general.
 
 *THIS PROJECT IS A WORK IN PROGRESS*
 
+* Table of Contents
+- [[#installation][Installation]]
+- [[#package-management][Package Management]]
+- [[#user-interface][User Interface]]
+- [[#packages][Packages]]
+- [[#misc][Misc]]
+
 * Installation
 You can install this configuration by cloning this repository and
 copying =init.el= and =early-init.el= to the default emacs directory.
@@ -166,7 +173,7 @@ menu of [[https://github.com/magit/magit][magit]] inside a project with a =.git=
 #+end_src
 
 ** org-mode
-[[https://orgmode.org/][Org mode]] is one of the most powerful features of Emacs, allowing for note-taking, 
+[[https://orgmode.org/][Org mode]] is one of the most powerful features of Emacs, allowing for note-taking,
 organization, document compilation, code execution, and more.
 #+begin_src elisp
   ;; Configure org-mode and related features
@@ -426,8 +433,8 @@ following elisp code.
   (setq initial-buffer-choice t)
   (when (executable-find "fortune")
     (let ((fortune-output (shell-command-to-string "fortune")))
-      (setq initial-scratch-message 
-            (concat ";; " 
+      (setq initial-scratch-message
+            (concat ";; "
                     (replace-regexp-in-string "\n" "\n;; " fortune-output)
                     "\n\n"))))
 #+end_src
