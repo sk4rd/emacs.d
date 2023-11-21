@@ -1,4 +1,4 @@
-x#+title: Sk4rd's Emacs Configuration
+#+title: Sk4rd's Emacs Configuration
 #+options: num:nil toc:nil
 #+property: header-args :results silent :tangle init.el
 
@@ -100,7 +100,7 @@ I like to use the Iosevka font.
     (setq initial-frame-alist '((font . "Iosevka-12"))))
 #+end_src
 
-** GUI
+** Bars
 Remove all the annoying bars and window decorations that are around
 the emacs buffer.
 #+begin_src elisp
@@ -111,6 +111,14 @@ the emacs buffer.
     (tool-bar-mode -1))
   (when (fboundp 'scroll-bar-mode)
     (scroll-bar-mode -1))
+#+end_src
+
+** Line Numbers
+Display line numbers in all programming buffers.
+#+begin_src elisp
+  ;; Add line numbers to programming buffers
+  (add-hook 'prog-mode-hook (lambda ()
+                              (display-line-numbers-mode 1)))
 #+end_src
 
 ** Theme
@@ -124,15 +132,6 @@ I use the gruvbox theme from the [[https://github.com/doomemacs/themes][doom ema
   (load-theme 'doom-gruvbox t)
   (doom-themes-visual-bell-config)
   (doom-themes-org-config))
-#+end_src
-
-** Indentation
-Instead of using spaces, I like to indent my code with tabs, so that
-anyone can adjust the tab-width for themselves.
-#+begin_src elisp
-  ;; Set indent method to 4 wide tabs
-  (setq-default indent-tabs-mode t)
-  (setq-default tab-width 4)
 #+end_src
 
 ** org-bullets
@@ -317,6 +316,23 @@ Nix language support for emacs.
 #+begin_src elisp
   (use-package yasnippet
     :config (yas-global-mode))
+#+end_src
+
+** yasnippet-java-mode
+#+begin_src elisp
+  (straight-use-package 'java-snippets)
+#+end_src
+
+** java-mode
+#+begin_src elisp
+  (use-package java-mode
+    :straight (:type built-in)
+    :mode "\\.java\\'"
+    :hook (java-mode . (lambda ()
+  					   (setq-local indent-tabs-mode nil) ; Use spaces instead of tabs
+                         (electric-pair-mode 1) ; Enable electric pair mode for automatic bracket insertion
+                         ;; Add a local before-save-hook to delete trailing whitespace
+                         (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))))
 #+end_src
 
 ** lsp-mode

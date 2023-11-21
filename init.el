@@ -1,15 +1,15 @@
 ;; Install and bootstrap straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
-	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-	(bootstrap-version 6))
+   (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+  (bootstrap-version 6))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
-	  (url-retrieve-synchronously
-	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-	   'silent 'inhibit-cookies)
-	(goto-char (point-max))
-	(eval-print-last-sexp)))
+    (url-retrieve-synchronously
+     "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+     'silent 'inhibit-cookies)
+  (goto-char (point-max))
+  (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
 ;; Install use-package using straight.el
@@ -34,6 +34,10 @@
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
 
+;; Add line numbers to programming buffers
+(add-hook 'prog-mode-hook (lambda ()
+                            (display-line-numbers-mode 1)))
+
 (use-package doom-themes
   :custom
   (doom-themes-enable-bold t)
@@ -42,10 +46,6 @@
   (load-theme 'doom-gruvbox t)
   (doom-themes-visual-bell-config)
   (doom-themes-org-config))
-
-;; Set indent method to 4 wide tabs
-(setq-default indent-tabs-mode t)
-(setq-default tab-width 4)
 
 (use-package org-bullets
   :custom
@@ -131,8 +131,8 @@
   :config
   ;; Refresh icons when toggling dired-subtree
   (advice-add 'dired-subtree-toggle :after (lambda ()
-					       (when all-the-icons-dired-mode
-						 (revert-buffer))))
+  				       (when all-the-icons-dired-mode
+  					 (revert-buffer))))
   :bind (:map dired-mode-map
          ("<tab>" . dired-subtree-toggle))) ; Bind <tab> to toggle subtrees in dired-mode
 
@@ -156,6 +156,17 @@
 
 (use-package yasnippet
   :config (yas-global-mode))
+
+(straight-use-package 'java-snippets)
+
+(use-package java-mode
+  :straight (:type built-in)
+  :mode "\\.java\\'"
+  :hook (java-mode . (lambda ()
+					   (setq-local indent-tabs-mode nil) ; Use spaces instead of tabs
+                       (electric-pair-mode 1) ; Enable electric pair mode for automatic bracket insertion
+                       ;; Add a local before-save-hook to delete trailing whitespace
+                       (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))))
 
 (use-package lsp-mode
   :hook ((lsp-mode . lsp-enable-which-key-integration))
