@@ -144,9 +144,6 @@
 (use-package helm
   :config (helm-mode))
 
-(use-package nix-mode
-  :mode "\\.nix\\'")
-
 (use-package projectile
   :custom (projectile-project-search-path '("~/docs/projects"))
   :bind-keymap ("C-c p" . projectile-command-map)
@@ -163,19 +160,31 @@
   :straight (:type built-in)
   :mode "\\.java\\'"
   :hook (java-mode . (lambda ()
-					   (setq-local indent-tabs-mode nil) ; Use spaces instead of tabs
+		       (setq-local indent-tabs-mode nil) ; Use spaces instead of tabs
                        (electric-pair-mode 1) ; Enable electric pair mode for automatic bracket insertion
                        ;; Add a local before-save-hook to delete trailing whitespace
                        (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))))
 
 (use-package lsp-mode
   :hook ((lsp-mode . lsp-enable-which-key-integration))
-  :config (setq lsp-completion-enable-additional-text-edit nil))
+  :config
+  (setq lsp-completion-enable-additional-text-edit nil))
 
 (use-package lsp-ui)
 
 (use-package lsp-java
   :config (add-hook 'java-mode-hook 'lsp))
+
+(use-package nix-mode
+  :mode "\\.nix\\'"
+  :hook (nix-mode . lsp-deferred))
+
+(use-package lsp-nix
+  :straight (lsp-nix :type git :host github :repo "oxalica/nil")
+  :ensure lsp-mode
+  :after (lsp-mode)
+  :custom
+  (lsp-nix-nil-formatter ["nixpkgs-fmt"]))
 
 (use-package lsp-treemacs)
 

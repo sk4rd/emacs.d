@@ -8,6 +8,8 @@ This is my personal emacs configuration inside of an org file. I use
 this config mostly for school but also for programming and daily notes
 in general.
 
+*THIS PROJECT IS A WORK IN PROGRESS*
+
 * Installation
 You can install this configuration by cloning this repository and
 copying =init.el= and =early-init.el= to the default emacs directory.
@@ -292,13 +294,6 @@ very useful.
     :config (helm-mode))
 #+end_src
 
-** nix-mode
-Nix language support for emacs.
-#+begin_src elisp
-  (use-package nix-mode
-    :mode "\\.nix\\'")
-#+end_src
-
 ** projectile
 #+begin_src elisp
   (use-package projectile
@@ -329,7 +324,7 @@ Nix language support for emacs.
     :straight (:type built-in)
     :mode "\\.java\\'"
     :hook (java-mode . (lambda ()
-  					   (setq-local indent-tabs-mode nil) ; Use spaces instead of tabs
+  		       (setq-local indent-tabs-mode nil) ; Use spaces instead of tabs
                          (electric-pair-mode 1) ; Enable electric pair mode for automatic bracket insertion
                          ;; Add a local before-save-hook to delete trailing whitespace
                          (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))))
@@ -339,7 +334,8 @@ Nix language support for emacs.
 #+begin_src elisp
   (use-package lsp-mode
     :hook ((lsp-mode . lsp-enable-which-key-integration))
-    :config (setq lsp-completion-enable-additional-text-edit nil))
+    :config
+    (setq lsp-completion-enable-additional-text-edit nil))
 #+end_src
 
 ** lsp-ui
@@ -351,6 +347,24 @@ Nix language support for emacs.
 #+begin_src elisp
   (use-package lsp-java
     :config (add-hook 'java-mode-hook 'lsp))
+#+end_src
+
+** nix-mode
+Nix language support for emacs.
+#+begin_src elisp
+  (use-package nix-mode
+    :mode "\\.nix\\'"
+    :hook (nix-mode . lsp-deferred))
+#+end_src
+
+** lsp-nix
+#+begin_src elisp
+  (use-package lsp-nix
+    :straight (lsp-nix :type git :host github :repo "oxalica/nil")
+    :ensure lsp-mode
+    :after (lsp-mode)
+    :custom
+    (lsp-nix-nil-formatter ["nixpkgs-fmt"]))
 #+end_src
 
 ** lsp-treemacs
