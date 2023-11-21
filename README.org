@@ -1,4 +1,4 @@
-#+title: Sk4rd's Emacs Configuration
+x#+title: Sk4rd's Emacs Configuration
 #+options: num:nil toc:nil
 #+property: header-args :results silent :tangle init.el
 
@@ -30,7 +30,7 @@ Then you need to put the following into your =init.el=.
   (require 'org)
   (org-babel-load-file
    (expand-file-name "README.org"
-		     user-emacs-directory))
+  		   user-emacs-directory))
 #+end_src
 
 ** Dependencies
@@ -126,21 +126,30 @@ I use the gruvbox theme from the [[https://github.com/doomemacs/themes][doom ema
   (doom-themes-org-config))
 #+end_src
 
+** Indentation
+Instead of using spaces, I like to indent my code with tabs, so that
+anyone can adjust the tab-width for themselves.
+#+begin_src elisp
+  ;; Set indent method to 4 wide tabs
+  (setq-default indent-tabs-mode t)
+  (setq-default tab-width 4)
+#+end_src
+
 ** org-bullets
 I want the bullet points in org-mode to look and be sized,
 differently. Therefore I use [[https://github.com/sabof/org-bullets][org-bullets]] to change them.
 #+begin_src elisp
-(use-package org-bullets
-  :custom
-  (org-bullets-bullet-list '("●" "◉" "◆" "◈" "▼")) ; Custom bullet points for org headings
-  :custom-face
-  (org-level-1 ((t (:inherit outline-1 :height 2.0)))) ; Larger font for top-level headings
-  (org-level-2 ((t (:inherit outline-2 :height 1.5)))) ; Medium font for second-level headings
-  (org-level-3 ((t (:inherit outline-3 :height 1.2)))) ; Slightly larger font for third-level headings
-  (org-level-4 ((t (:inherit outline-4 :height 1.0)))) ; Default font for fourth-level headings
-  (org-level-5 ((t (:inherit outline-5 :height 1.0)))) ; Default font for fifth-level headings
-  :hook
-  (org-mode . org-bullets-mode)) ; Enable org-bullets-mode automatically in org-mode
+  (use-package org-bullets
+    :custom
+    (org-bullets-bullet-list '("●" "◉" "◆" "◈" "▼")) ; Custom bullet points for org headings
+    :custom-face
+    (org-level-1 ((t (:inherit outline-1 :height 2.0)))) ; Larger font for top-level headings
+    (org-level-2 ((t (:inherit outline-2 :height 1.5)))) ; Medium font for second-level headings
+    (org-level-3 ((t (:inherit outline-3 :height 1.2)))) ; Slightly larger font for third-level headings
+    (org-level-4 ((t (:inherit outline-4 :height 1.0)))) ; Default font for fourth-level headings
+    (org-level-5 ((t (:inherit outline-5 :height 1.0)))) ; Default font for fifth-level headings
+    :hook
+    (org-mode . org-bullets-mode)) ; Enable org-bullets-mode automatically in org-mode
 #+end_src
 
 * Packages
@@ -178,7 +187,6 @@ note-taking method called [[https://zettelkasten.de/posts/overview/][Zettelkaste
 #+begin_src elisp
   ;; Configure org-roam for personal knowledge management
   (use-package org-roam
-    :after org  ; Load after org to ensure dependencies
     :init
     (setq org-roam-v2-ack t)  ; Acknowledge migration to org-roam v2
     :custom
@@ -296,6 +304,7 @@ Nix language support for emacs.
 #+begin_src elisp
   (use-package projectile
     :custom (projectile-project-search-path '("~/docs/projects"))
+    :bind-keymap ("C-c p" . projectile-command-map)
     :config (projectile-mode))
 #+end_src
 
@@ -364,12 +373,12 @@ files into subdirs in the main emacs directory.
   ;; Move backup and autosave files to
   ;; their respective subdirectories
   (setq backup-directory-alist
-	`((".*" . ,"~/.emacs.d/backups")))
+        `((".*" . ,"~/.emacs.d/backups")))
   (setq auto-save-file-name-transforms
-	`((".*" ,"~/.emacs.d/auto-saves" t)))
+        `((".*" ,"~/.emacs.d/auto-saves" t)))
   ;; Set the auto save timeout interval to a lower value
   (setq auto-save-timeout 10
-	auto-save-interval 150)
+        auto-save-interval 150)
 #+end_src
 
 ** Surpress native-comp warnings

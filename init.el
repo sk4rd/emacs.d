@@ -1,15 +1,15 @@
 ;; Install and bootstrap straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
+	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+	(bootstrap-version 6))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
-	(url-retrieve-synchronously
-	 "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-	 'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
+	  (url-retrieve-synchronously
+	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	   'silent 'inhibit-cookies)
+	(goto-char (point-max))
+	(eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
 ;; Install use-package using straight.el
@@ -43,6 +43,10 @@
   (doom-themes-visual-bell-config)
   (doom-themes-org-config))
 
+;; Set indent method to 4 wide tabs
+(setq-default indent-tabs-mode t)
+(setq-default tab-width 4)
+
 (use-package org-bullets
   :custom
   (org-bullets-bullet-list '("●" "◉" "◆" "◈" "▼")) ; Custom bullet points for org headings
@@ -72,7 +76,6 @@
 
 ;; Configure org-roam for personal knowledge management
 (use-package org-roam
-  :after org  ; Load after org to ensure dependencies
   :init
   (setq org-roam-v2-ack t)  ; Acknowledge migration to org-roam v2
   :custom
@@ -128,8 +131,8 @@
   :config
   ;; Refresh icons when toggling dired-subtree
   (advice-add 'dired-subtree-toggle :after (lambda ()
-					     (when all-the-icons-dired-mode
-					       (revert-buffer))))
+					       (when all-the-icons-dired-mode
+						 (revert-buffer))))
   :bind (:map dired-mode-map
          ("<tab>" . dired-subtree-toggle))) ; Bind <tab> to toggle subtrees in dired-mode
 
@@ -146,6 +149,7 @@
 
 (use-package projectile
   :custom (projectile-project-search-path '("~/docs/projects"))
+  :bind-keymap ("C-c p" . projectile-command-map)
   :config (projectile-mode))
 
 (use-package flycheck)
