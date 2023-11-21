@@ -18,5 +18,8 @@
 ;; Tell the user a fortune on start-up
 (setq initial-buffer-choice t)
 (when (executable-find "fortune")
-  (setq initial-scratch-message 
-        (concat ";; " (shell-command-to-string "fortune") "\n\n")))
+  (let ((fortune-output (shell-command-to-string "fortune")))
+    (setq initial-scratch-message 
+          (concat ";; " 
+                  (replace-regexp-in-string "\n" "\n;; " fortune-output)
+                  "\n\n"))))
