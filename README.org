@@ -2,13 +2,13 @@
 #+options: num:nil toc:nil
 #+property: header-args :results silent :tangle init.el
 
-[[file:preview.png]]
-
 This is my personal emacs configuration inside of an org file. I use
 this config mostly for school but also for programming and daily notes
 in general.
 
 *THIS PROJECT IS A WORK IN PROGRESS*
+
+[[file:preview.png]]
 
 * Table of Contents
 - [[#installation][Installation]]
@@ -18,20 +18,42 @@ in general.
 - [[#misc][Misc]]
 
 * Installation
-You can install this configuration by cloning this repository and
-copying =init.el= and =early-init.el= to the default emacs directory.
+** Automatic
+For a quick and automatic setup, you can use the following
+script. This script will clone the repository, create the necessary
+directories, and set up the configuration files for you. Ensure you
+have =emacs= installed on your system.
+
+Execute the following command in your terminal. It will perform all
+necessary steps to set up the Emacs configuration:
 #+begin_src sh :tangle no
-  git clone https://github.com/sk4rd/emacs.d.git
-  cp ./emacs.d/init.el ./emacs.d/early-init.el ~/.emacs.d/
+  curl -sL https://raw.githubusercontent.com/sk4rd/emacs.d/master/install.sh | bash
 #+end_src
 
-** Alternative approach
-Alternatively, you can use the org file directly by specifiying it's
-load path in your own =init.el=.
+** Manual
+If you prefer to install this configuration manually, start by cloning
+the repository. Then, move (or copy) the =init.el= and =early-init.el=
+files into your default Emacs directory (=~/.emacs.d=). If you already
+have a configuration in =~/.emacs.d=, consider backing it up first.
 
-Start by copying =README.org= into your default emacs directory.
+Execute the following commands in your terminal to clone the
+repository and move the files:
 #+begin_src sh :tangle no
-  cp ./emacs.d/README.org ~/.emacs.d/
+  git clone https://github.com/sk4rd/emacs.d.git
+  mkdir -p ~/.emacs.d
+  mv ./emacs.d/init.el ./emacs.d/early-init.el ~/.emacs.d/
+#+end_src
+
+Alternatively, if you wish to copy instead of moving the files,
+replace =mv= with =cp= in the above command.
+
+** Using This Configuration Directly
+You can use this README (=README.org=) directly as your Emacs
+configuration file. This method involves executing the Emacs Lisp
+(elisp) code blocks contained within the org file.
+#+begin_src sh :tangle no
+  mkdir -p ~/.emacs.d
+  mv ./emacs.d/README.org ~/.emacs.d/
 #+end_src
 
 Then you need to put the following into your =init.el=.
@@ -44,9 +66,6 @@ Then you need to put the following into your =init.el=.
 
 ** Dependencies
 You need to install the =Iosevka= font to display all text correctly.
-
-Remember to also install the missing icons by running =M-x
-all-the-icons-install-fonts=, upon your first emacs launch.
 
 * Package Management
 ** package.el
@@ -402,37 +421,63 @@ Nix language support for emacs.
 #+end_src
 
 * Misc
+This section includes a range of Emacs customizations that don't fall
+into conventional categories. It features various tweaks and
+enhancements, from managing file backups to unique personal touches
+like displaying startup quotes. This miscellaneous collection serves
+to fine-tune and personalize the Emacs experience.
+
 ** Backup and Autosave files
-Emacs leaves some files around and 'contaminates' the directories
-being worked on. I don't like this behavior, so we just move these
-files into subdirs in the main emacs directory.
+Under this section, the Emacs configuration is adjusted to manage
+backup and autosave files more cleanly. By default, Emacs creates
+backup and autosave files in the same directory as the original file,
+which can lead to clutter. This configuration changes that behavior by
+redirecting these files to dedicated subdirectories within the
+=~/.emacs.d= directory. This keeps your working directories clean and
+uncluttered, storing all backup and autosave files in a centralized
+location.
 #+begin_src elisp :tangle early-init.el
-  ;; Move backup and autosave files to
-  ;; their respective subdirectories
+  ;; Configure Emacs to store backup and autosave files in separate subdirectories
+  ;; within the .emacs.d directory, preventing clutter in working directories.
   (setq backup-directory-alist
         `((".*" . ,"~/.emacs.d/backups")))
   (setq auto-save-file-name-transforms
         `((".*" ,"~/.emacs.d/auto-saves" t)))
-  ;; Set the auto save timeout interval to a lower value
+  ;; Adjust auto-save settings: set the timeout to 10 seconds and the save interval to 150 keystrokes.
   (setq auto-save-timeout 10
         auto-save-interval 150)
 #+end_src
 
 ** Surpress native-comp warnings
-Emacs gives me some warnings, which you can safely ignore with the
-following elisp code.
+Emacs can sometimes produce native-compilation warnings, especially
+when using newer features or packages that utilize native code
+compilation. These warnings can be distracting or unnecessary for the
+average user. This section of the configuration silences these
+warnings, leading to a cleaner and less distracting Emacs
+experience. It's especially useful if you're not actively debugging
+Emacs packages or your Emacs configuration.
 #+begin_src elisp :tangle early-init.el
-  ;; Disable annyoing native-comp warnings
-  (setq native-comp-async-report-warnings-errors 'silent)
-  (setq warning-suppress-types '((comp)))
+  ;; Suppress warnings from Emacs's native-compilation feature.
+  ;; This prevents the display of potentially distracting compiler warnings.
+  (setq native-comp-async-report-warnings-errors 'silent) ;; Silences native-comp warnings.
+  (setq warning-suppress-types '((comp))) ;; Suppresses specific compiler-related warnings.
 #+end_src
 
 ** Tell a fortune
+This is a fun and unique addition to your Emacs configuration. It uses
+the fortune program (a classic Unix program that displays a
+pseudorandom message from a database of quotations) to display a
+random 'fortune' message in the scratch buffer upon Emacs
+startup. This feature adds a bit of personality and whimsy to your
+Emacs setup, greeting you with a different quote or message each time
+you start Emacs.
 #+begin_src elisp :tangle early-init.el
-  ;; Tell the user a fortune on start-up
-  (setq initial-buffer-choice t)
+  ;; Display a random fortune message in the scratch buffer upon startup.
+  ;; This requires the 'fortune' program to be installed on the system.
+  (setq initial-buffer-choice t) ;; Use the *scratch* buffer as the initial buffer.
   (when (executable-find "fortune")
     (let ((fortune-output (shell-command-to-string "fortune")))
+      ;; Format and set the initial scratch message to a fortune quote.
       (setq initial-scratch-message
             (concat ";; "
                     (replace-regexp-in-string "\n" "\n;; " fortune-output)
