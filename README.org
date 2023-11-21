@@ -12,10 +12,26 @@ in general.
 
 * Table of Contents
 - [[#installation][Installation]]
+  - [[#automatic][Automatic]]
+  - [[#manual][Manual]]
+  - [[#requirements--dependencies][Requirements / Dependencies]]
 - [[#package-management][Package Management]]
+  - [[#packageel][package.el]]
+  - [[#straightel][straight.el]]
+  - [[#use-package][use-package]]
 - [[#user-interface][User Interface]]
+  - [[#font][Font]]
+  - [[#bars][Bars]]
+  - [[#line-numbers][Line Numbers]]
+  - [[#theme][Theme]]
+  - [[#org-mode-bullets][Org-Mode Bullets]]
+  - [[#icons][Icons]]
+  - [[#icons-in-dired][Icons in Dired]]
 - [[#packages][Packages]]
-- [[#misc][Misc]]
+- [[#miscellaneous][Miscellaneous]]
+  - [[#backup-and-autosave-files][Backup and Autosave files]]
+  - [[#surpress-native-comp-warnings][Surpress native-comp warnings]]
+  - [[#tell-a-fortune][Tell a Fortune]]
 
 * Installation
 ** Automatic
@@ -229,18 +245,7 @@ directories simple and clean.
                             (all-the-icons-dired-mode)))))
 #+end_src
 
-* Packages
-** magit
-[[https://magit.vc/][Magit]] enables git integration inside of emacs. You can open the main
-menu of [[https://github.com/magit/magit][magit]] inside a project with a =.git= directory.
-#+begin_src elisp
-  (use-package magit
-    :bind
-    ("C-x g" . magit-status)
-    ("C-x M-g" . magit-dispatch)
-    ("C-c M-g" . magit-file-dispatch))
-#+end_src
-
+* Org Mode
 ** org-mode
 [[https://orgmode.org/][Org mode]] is one of the most powerful features of Emacs, allowing for note-taking,
 organization, document compilation, code execution, and more.
@@ -304,6 +309,81 @@ default browser.
     (org-roam-ui-open-on-start t)) ; Open UI automatically at start
 #+end_src
 
+* LSP Mode
+** lsp-mode
+#+begin_src elisp
+  (use-package lsp-mode
+    :hook ((lsp-mode . lsp-enable-which-key-integration))
+    :config
+    (setq lsp-completion-enable-additional-text-edit nil))
+#+end_src
+
+** lsp-ui
+#+begin_src elisp
+  (use-package lsp-ui)
+#+end_src
+
+** lsp-java
+#+begin_src elisp
+  (use-package lsp-java
+    :config (add-hook 'java-mode-hook 'lsp))
+#+end_src
+
+** lsp-nix
+#+begin_src elisp
+  (use-package lsp-nix
+    :straight (lsp-nix :type git :host github :repo "oxalica/nil")
+    :ensure lsp-mode
+    :after (lsp-mode)
+    :custom
+    (lsp-nix-nil-formatter ["nixpkgs-fmt"]))
+#+end_src
+
+** lsp-treemacs
+#+begin_src elisp
+  (use-package lsp-treemacs)
+#+end_src
+
+** helm-lsp
+#+begin_src elisp
+  (use-package helm-lsp)
+#+end_src
+
+
+* Coding Languages
+** java-mode
+#+begin_src elisp
+  (use-package java-mode
+    :straight (:type built-in)
+    :mode "\\.java\\'"
+    :hook (java-mode . (lambda ()
+  		       (setq-local indent-tabs-mode nil) ; Use spaces instead of tabs
+                         (electric-pair-mode 1) ; Enable electric pair mode for automatic bracket insertion
+                         ;; Add a local before-save-hook to delete trailing whitespace
+                         (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))))
+#+end_src
+
+** nix-mode
+Nix language support for emacs.
+#+begin_src elisp
+  (use-package nix-mode
+    :mode "\\.nix\\'"
+    :hook (nix-mode . lsp-deferred))
+#+end_src
+
+
+* Other
+** magit
+[[https://magit.vc/][Magit]] enables git integration inside of emacs. You can open the main
+menu of [[https://github.com/magit/magit][magit]] inside a project with a =.git= directory.
+#+begin_src elisp
+  (use-package magit
+    :bind
+    ("C-x g" . magit-status)
+    ("C-x M-g" . magit-dispatch)
+    ("C-c M-g" . magit-file-dispatch))
+#+end_src
+
 ** dired-subtree
 [[https://github.com/Fuco1/dired-hacks/tree/master][This package]] enhances `dired-mode` by allowing you to expand and
 collapse directories to view their contents inline, without leaving
@@ -364,60 +444,6 @@ very useful.
   (straight-use-package 'java-snippets)
 #+end_src
 
-** java-mode
-#+begin_src elisp
-  (use-package java-mode
-    :straight (:type built-in)
-    :mode "\\.java\\'"
-    :hook (java-mode . (lambda ()
-  		       (setq-local indent-tabs-mode nil) ; Use spaces instead of tabs
-                         (electric-pair-mode 1) ; Enable electric pair mode for automatic bracket insertion
-                         ;; Add a local before-save-hook to delete trailing whitespace
-                         (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))))
-#+end_src
-
-** lsp-mode
-#+begin_src elisp
-  (use-package lsp-mode
-    :hook ((lsp-mode . lsp-enable-which-key-integration))
-    :config
-    (setq lsp-completion-enable-additional-text-edit nil))
-#+end_src
-
-** lsp-ui
-#+begin_src elisp
-  (use-package lsp-ui)
-#+end_src
-
-** lsp-java
-#+begin_src elisp
-  (use-package lsp-java
-    :config (add-hook 'java-mode-hook 'lsp))
-#+end_src
-
-** nix-mode
-Nix language support for emacs.
-#+begin_src elisp
-  (use-package nix-mode
-    :mode "\\.nix\\'"
-    :hook (nix-mode . lsp-deferred))
-#+end_src
-
-** lsp-nix
-#+begin_src elisp
-  (use-package lsp-nix
-    :straight (lsp-nix :type git :host github :repo "oxalica/nil")
-    :ensure lsp-mode
-    :after (lsp-mode)
-    :custom
-    (lsp-nix-nil-formatter ["nixpkgs-fmt"]))
-#+end_src
-
-** lsp-treemacs
-#+begin_src elisp
-  (use-package lsp-treemacs)
-#+end_src
-
 ** hydra
 #+begin_src elisp
   (use-package hydra)
@@ -435,12 +461,8 @@ Nix language support for emacs.
     :config (dap-auto-configure-mode))
 #+end_src
 
-** helm-lsp
-#+begin_src elisp
-  (use-package helm-lsp)
-#+end_src
 
-* Misc
+* Miscellaneous
 This section includes a range of Emacs customizations that don't fall
 into conventional categories. It features various tweaks and
 enhancements, from managing file backups to unique personal touches
@@ -483,7 +505,7 @@ Emacs packages or your Emacs configuration.
   (setq warning-suppress-types '((comp))) ;; Suppresses specific compiler-related warnings.
 #+end_src
 
-** Tell a fortune
+** Tell a Fortune
 This is a fun and unique addition to your Emacs configuration. It uses
 the fortune program (a classic Unix program that displays a
 pseudorandom message from a database of quotations) to display a

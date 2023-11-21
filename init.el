@@ -79,12 +79,6 @@
                         (unless (file-remote-p default-directory)
                           (all-the-icons-dired-mode)))))
 
-(use-package magit
-  :bind
-  ("C-x g" . magit-status)
-  ("C-x M-g" . magit-dispatch)
-  ("C-c M-g" . magit-file-dispatch))
-
 ;; Configure org-mode and related features
 (use-package org
   :bind ("C-c a" . org-agenda)
@@ -128,6 +122,46 @@
   (org-roam-ui-update-on-save t) ; Update UI graph on each save
   (org-roam-ui-open-on-start t)) ; Open UI automatically at start
 
+(use-package lsp-mode
+  :hook ((lsp-mode . lsp-enable-which-key-integration))
+  :config
+  (setq lsp-completion-enable-additional-text-edit nil))
+
+(use-package lsp-ui)
+
+(use-package lsp-java
+  :config (add-hook 'java-mode-hook 'lsp))
+
+(use-package lsp-nix
+  :straight (lsp-nix :type git :host github :repo "oxalica/nil")
+  :ensure lsp-mode
+  :after (lsp-mode)
+  :custom
+  (lsp-nix-nil-formatter ["nixpkgs-fmt"]))
+
+(use-package lsp-treemacs)
+
+(use-package helm-lsp)
+
+(use-package java-mode
+  :straight (:type built-in)
+  :mode "\\.java\\'"
+  :hook (java-mode . (lambda ()
+		       (setq-local indent-tabs-mode nil) ; Use spaces instead of tabs
+                       (electric-pair-mode 1) ; Enable electric pair mode for automatic bracket insertion
+                       ;; Add a local before-save-hook to delete trailing whitespace
+                       (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))))
+
+(use-package nix-mode
+  :mode "\\.nix\\'"
+  :hook (nix-mode . lsp-deferred))
+
+(use-package magit
+  :bind
+  ("C-x g" . magit-status)
+  ("C-x M-g" . magit-dispatch)
+  ("C-c M-g" . magit-file-dispatch))
+
 (use-package dired-subtree
   :config
   ;; Refresh icons when toggling dired-subtree
@@ -157,38 +191,6 @@
 
 (straight-use-package 'java-snippets)
 
-(use-package java-mode
-  :straight (:type built-in)
-  :mode "\\.java\\'"
-  :hook (java-mode . (lambda ()
-		       (setq-local indent-tabs-mode nil) ; Use spaces instead of tabs
-                       (electric-pair-mode 1) ; Enable electric pair mode for automatic bracket insertion
-                       ;; Add a local before-save-hook to delete trailing whitespace
-                       (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))))
-
-(use-package lsp-mode
-  :hook ((lsp-mode . lsp-enable-which-key-integration))
-  :config
-  (setq lsp-completion-enable-additional-text-edit nil))
-
-(use-package lsp-ui)
-
-(use-package lsp-java
-  :config (add-hook 'java-mode-hook 'lsp))
-
-(use-package nix-mode
-  :mode "\\.nix\\'"
-  :hook (nix-mode . lsp-deferred))
-
-(use-package lsp-nix
-  :straight (lsp-nix :type git :host github :repo "oxalica/nil")
-  :ensure lsp-mode
-  :after (lsp-mode)
-  :custom
-  (lsp-nix-nil-formatter ["nixpkgs-fmt"]))
-
-(use-package lsp-treemacs)
-
 (use-package hydra)
 
 (use-package company)
@@ -196,5 +198,3 @@
 (use-package dap-mode
   :after lsp-mode
   :config (dap-auto-configure-mode))
-
-(use-package helm-lsp)
