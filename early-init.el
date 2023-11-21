@@ -1,24 +1,27 @@
 ;; Disable Emacs's default package manager
 (setq package-enable-at-startup nil)
 
-;; Move backup and autosave files to
-;; their respective subdirectories
+;; Configure Emacs to store backup and autosave files in separate subdirectories
+;; within the .emacs.d directory, preventing clutter in working directories.
 (setq backup-directory-alist
       `((".*" . ,"~/.emacs.d/backups")))
 (setq auto-save-file-name-transforms
       `((".*" ,"~/.emacs.d/auto-saves" t)))
-;; Set the auto save timeout interval to a lower value
+;; Adjust auto-save settings: set the timeout to 10 seconds and the save interval to 150 keystrokes.
 (setq auto-save-timeout 10
       auto-save-interval 150)
 
-;; Disable annyoing native-comp warnings
-(setq native-comp-async-report-warnings-errors 'silent)
-(setq warning-suppress-types '((comp)))
+;; Suppress warnings from Emacs's native-compilation feature.
+;; This prevents the display of potentially distracting compiler warnings.
+(setq native-comp-async-report-warnings-errors 'silent) ;; Silences native-comp warnings.
+(setq warning-suppress-types '((comp))) ;; Suppresses specific compiler-related warnings.
 
-;; Tell the user a fortune on start-up
-(setq initial-buffer-choice t)
+;; Display a random fortune message in the scratch buffer upon startup.
+;; This requires the 'fortune' program to be installed on the system.
+(setq initial-buffer-choice t) ;; Use the *scratch* buffer as the initial buffer.
 (when (executable-find "fortune")
   (let ((fortune-output (shell-command-to-string "fortune")))
+    ;; Format and set the initial scratch message to a fortune quote.
     (setq initial-scratch-message
           (concat ";; "
                   (replace-regexp-in-string "\n" "\n;; " fortune-output)

@@ -20,13 +20,13 @@
   (straight-use-package-by-default t))
 (setq use-package-always-ensure t)
 
-;; Check if Iosevka font is available and set it as the default font
+;; Setting 'Iosevka' as the default font, if it's available
 (when (member "Iosevka" (font-family-list))
   (set-frame-font "Iosevka-12" nil t)
   (setq default-frame-alist '((font . "Iosevka-12")))
   (setq initial-frame-alist '((font . "Iosevka-12"))))
 
-;; Remove annoying GUI elements if they are available
+;; Strip down the GUI to the essentials
 (when (fboundp 'menu-bar-mode)
   (menu-bar-mode -1))
 (when (fboundp 'tool-bar-mode)
@@ -38,6 +38,7 @@
 (add-hook 'prog-mode-hook (lambda ()
                             (display-line-numbers-mode 1)))
 
+;; Apply the 'gruvbox' theme for a comfortable visual experience
 (use-package doom-themes
   :custom
   (doom-themes-enable-bold t)
@@ -58,6 +59,25 @@
   (org-level-5 ((t (:inherit outline-5 :height 1.0)))) ; Default font for fifth-level headings
   :hook
   (org-mode . org-bullets-mode)) ; Enable org-bullets-mode automatically in org-mode
+
+(use-package all-the-icons
+  :if (display-graphic-p)
+  :config
+  ;; Check if the fonts have been installed
+  (unless (file-exists-p "~/.emacs.d/.all-the-icons-installed")
+    ;; Temporarily override `yes-or-no-p` to always return t (yes)
+    (cl-letf (((symbol-function 'yes-or-no-p) (lambda (&rest args) t))
+              ((symbol-function 'y-or-n-p) (lambda (&rest args) t)))
+      ;; Install the fonts
+      (all-the-icons-install-fonts))
+    ;; Create a flag file to indicate the fonts have been installed
+    (with-temp-file "~/.emacs.d/.all-the-icons-installed" (insert "Done"))))
+
+(use-package all-the-icons-dired
+  :hook (dired-mode . (lambda ()
+                        ;; Enable all-the-icons-dired-mode only for local directories
+                        (unless (file-remote-p default-directory)
+                          (all-the-icons-dired-mode)))))
 
 (use-package magit
   :bind
@@ -107,25 +127,6 @@
   (org-roam-ui-follow t) ; Enable following the current node
   (org-roam-ui-update-on-save t) ; Update UI graph on each save
   (org-roam-ui-open-on-start t)) ; Open UI automatically at start
-
-(use-package all-the-icons
-  :if (display-graphic-p)
-  :config
-  ;; Check if the fonts have been installed
-  (unless (file-exists-p "~/.emacs.d/.all-the-icons-installed")
-    ;; Temporarily override `yes-or-no-p` to always return t (yes)
-    (cl-letf (((symbol-function 'yes-or-no-p) (lambda (&rest args) t))
-              ((symbol-function 'y-or-n-p) (lambda (&rest args) t)))
-      ;; Install the fonts
-      (all-the-icons-install-fonts))
-    ;; Create a flag file to indicate the fonts have been installed
-    (with-temp-file "~/.emacs.d/.all-the-icons-installed" (insert "Done"))))
-
-(use-package all-the-icons-dired
-  :hook (dired-mode . (lambda ()
-                        ;; Enable all-the-icons-dired-mode only for local directories
-                        (unless (file-remote-p default-directory)
-                          (all-the-icons-dired-mode)))))
 
 (use-package dired-subtree
   :config

@@ -64,8 +64,19 @@ Then you need to put the following into your =init.el=.
   		   user-emacs-directory))
 #+end_src
 
-** Dependencies
-You need to install the =Iosevka= font to display all text correctly.
+** Requirements / Dependencies
+Before proceeding with the installation and setup of this Emacs
+configuration, please ensure the following dependencies are installed
+on your system:
+
+1. *Iosevka Font*: This configuration uses the 'Iosevka' font for its
+   aesthetic and readability. It can be downloaded and installed from
+   [[https://github.com/be5invis/Iosevka][Iosevka's GitHub repository]] or through your operating system's
+   package manager.
+
+2. *Fortune*: The [[https://wiki.archlinux.org/title/Fortune]['fortune' program]] is used to display random quotes
+   at startup. It is available in the repositories of most Unix-like
+   operating systems. Install it using your system's package manager.
 
 * Package Management
 ** package.el
@@ -115,13 +126,14 @@ sources from straight by default.
 #+end_src
 
 * User Interface
-Below are all code snippets regarding the customization of the
-graphical user interface.
+Below, you'll find the tweaks I've applied to Emacs' UI, making it
+more visually appealing and user-friendly.
 
 ** Font
-I like to use the Iosevka font.
+Opting for the [[https://github.com/be5invis/Iosevka][Iosevka]] font here, known for its clarity, which is
+especially great for coding.
 #+begin_src elisp
-  ;; Check if Iosevka font is available and set it as the default font
+  ;; Setting 'Iosevka' as the default font, if it's available
   (when (member "Iosevka" (font-family-list))
     (set-frame-font "Iosevka-12" nil t)
     (setq default-frame-alist '((font . "Iosevka-12")))
@@ -129,10 +141,10 @@ I like to use the Iosevka font.
 #+end_src
 
 ** Bars
-Remove all the annoying bars and window decorations that are around
-the emacs buffer.
+I've removed extraneous bars and decorations to create a cleaner
+workspace.
 #+begin_src elisp
-  ;; Remove annoying GUI elements if they are available
+  ;; Strip down the GUI to the essentials
   (when (fboundp 'menu-bar-mode)
     (menu-bar-mode -1))
   (when (fboundp 'tool-bar-mode)
@@ -142,7 +154,8 @@ the emacs buffer.
 #+end_src
 
 ** Line Numbers
-Display line numbers in all programming buffers.
+Enabled line numbers in programming buffers for better navigation and
+code readability.
 #+begin_src elisp
   ;; Add line numbers to programming buffers
   (add-hook 'prog-mode-hook (lambda ()
@@ -150,19 +163,21 @@ Display line numbers in all programming buffers.
 #+end_src
 
 ** Theme
-I use the gruvbox theme from the [[https://github.com/doomemacs/themes][doom emacs theme collection]].
+Chose the 'gruvbox' theme from the [[https://github.com/doomemacs/themes][Doom Emacs themes]] for its warm,
+eye-friendly color scheme.
 #+begin_src elisp
-(use-package doom-themes
-  :custom
-  (doom-themes-enable-bold t)
-  (doom-themes-enable-italic t)
-  :config
-  (load-theme 'doom-gruvbox t)
-  (doom-themes-visual-bell-config)
-  (doom-themes-org-config))
+  ;; Apply the 'gruvbox' theme for a comfortable visual experience
+  (use-package doom-themes
+    :custom
+    (doom-themes-enable-bold t)
+    (doom-themes-enable-italic t)
+    :config
+    (load-theme 'doom-gruvbox t)
+    (doom-themes-visual-bell-config)
+    (doom-themes-org-config))
 #+end_src
 
-** org-bullets
+** Org-Mode Bullets
 I want the bullet points in org-mode to look and be sized,
 differently. Therefore I use [[https://github.com/sabof/org-bullets][org-bullets]] to change them.
 #+begin_src elisp
@@ -177,6 +192,41 @@ differently. Therefore I use [[https://github.com/sabof/org-bullets][org-bullets
     (org-level-5 ((t (:inherit outline-5 :height 1.0)))) ; Default font for fifth-level headings
     :hook
     (org-mode . org-bullets-mode)) ; Enable org-bullets-mode automatically in org-mode
+#+end_src
+
+** Icons
+To make Emacs more sleek, I use the [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] package, which
+provides a rich set of icon fonts. It's especially useful since
+various packages in this configuration, like [[#icons-in-dired][all-the-icons-dired]], rely
+on these icons. The setup ensures that the necessary fonts are
+installed and ready to use.
+#+begin_src elisp
+  (use-package all-the-icons
+    :if (display-graphic-p)
+    :config
+    ;; Check if the fonts have been installed
+    (unless (file-exists-p "~/.emacs.d/.all-the-icons-installed")
+      ;; Temporarily override `yes-or-no-p` to always return t (yes)
+      (cl-letf (((symbol-function 'yes-or-no-p) (lambda (&rest args) t))
+                ((symbol-function 'y-or-n-p) (lambda (&rest args) t)))
+        ;; Install the fonts
+        (all-the-icons-install-fonts))
+      ;; Create a flag file to indicate the fonts have been installed
+      (with-temp-file "~/.emacs.d/.all-the-icons-installed" (insert "Done"))))
+#+end_src
+
+** Icons in Dired
+For a more visually intuitive experience in Dired mode, I use
+[[https://github.com/jtbm37/all-the-icons-dired][all-the-icons-dired]]. This package integrates icons from [[#icons][all-the-icons]]
+into Dired, making it easier to identify file types at a glance. It's
+set up to activate only for local directories, keeping remote
+directories simple and clean.
+#+begin_src elisp
+  (use-package all-the-icons-dired
+    :hook (dired-mode . (lambda ()
+                          ;; Enable all-the-icons-dired-mode only for local directories
+                          (unless (file-remote-p default-directory)
+                            (all-the-icons-dired-mode)))))
 #+end_src
 
 * Packages
@@ -252,36 +302,6 @@ default browser.
     (org-roam-ui-follow t) ; Enable following the current node
     (org-roam-ui-update-on-save t) ; Update UI graph on each save
     (org-roam-ui-open-on-start t)) ; Open UI automatically at start
-#+end_src
-
-** all-the-icons
-[[https://github.com/domtronn/all-the-icons.el][All the icons]] is a helper package for emacs which installs icon fonts
-for you. Some packages in this config use all-the-icons so we need to
-download it and set it up.
-#+begin_src elisp
-  (use-package all-the-icons
-    :if (display-graphic-p)
-    :config
-    ;; Check if the fonts have been installed
-    (unless (file-exists-p "~/.emacs.d/.all-the-icons-installed")
-      ;; Temporarily override `yes-or-no-p` to always return t (yes)
-      (cl-letf (((symbol-function 'yes-or-no-p) (lambda (&rest args) t))
-                ((symbol-function 'y-or-n-p) (lambda (&rest args) t)))
-        ;; Install the fonts
-        (all-the-icons-install-fonts))
-      ;; Create a flag file to indicate the fonts have been installed
-      (with-temp-file "~/.emacs.d/.all-the-icons-installed" (insert "Done"))))
-#+end_src
-
-** all-the-icons-dired
-[[https://github.com/jtbm37/all-the-icons-dired][all-the-icons-dired]] is a package which adds fancy icons from
-[[https://github.com/domtronn/all-the-icons.el][all-the-icons]] to dired-mode.
-#+begin_src elisp
-  (use-package all-the-icons-dired
-    :hook (dired-mode . (lambda ()
-                          ;; Enable all-the-icons-dired-mode only for local directories
-                          (unless (file-remote-p default-directory)
-                            (all-the-icons-dired-mode)))))
 #+end_src
 
 ** dired-subtree
