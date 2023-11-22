@@ -48,24 +48,26 @@
   (doom-themes-visual-bell-config)
   (doom-themes-org-config))
 
-(use-package all-the-icons
+(use-package doom-modeline
+  :init (doom-modeline-mode 1))
+
+(use-package nerd-icons
+  :straight (nerd-icons :type git :host github :repo "rainstormstudio/nerd-icons.el" :branch "main")
   :if (display-graphic-p)
   :config
-  ;; Check if the fonts have been installed
-  (unless (file-exists-p "~/.emacs.d/.all-the-icons-installed")
+  (unless (file-exists-p "~/.emacs.d/.nerd-icons-installed")
     ;; Temporarily override `yes-or-no-p` to always return t (yes)
     (cl-letf (((symbol-function 'yes-or-no-p) (lambda (&rest args) t))
               ((symbol-function 'y-or-n-p) (lambda (&rest args) t)))
-      ;; Install the fonts
-      (all-the-icons-install-fonts))
+      ;; Install the nerd icons
+      (nerd-icons-install-fonts))
     ;; Create a flag file to indicate the fonts have been installed
-    (with-temp-file "~/.emacs.d/.all-the-icons-installed" (insert "Done"))))
+    (with-temp-file "~/.emacs.d/.nerd-icons-installed" (insert "Done"))))
 
-(use-package all-the-icons-dired
-  :hook (dired-mode . (lambda ()
-                        ;; Enable all-the-icons-dired-mode only for local directories
-                        (unless (file-remote-p default-directory)
-                          (all-the-icons-dired-mode)))))
+(use-package nerd-icons-dired
+  :straight (nerd-icons-dired :type git :host github :repo "rainstormstudio/nerd-icons-dired" :branch "main")
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
 
 ;; Configure org-mode and related features
 (use-package org

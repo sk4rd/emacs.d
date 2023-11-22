@@ -109,6 +109,10 @@ on your system:
    operating systems. Install it using your system's package manager.
 
 * Package Management
+Here, I outline how Emacs packages are managed in my setup, focusing
+on the transition from the default package manager to alternatives
+like straight.el and use-package for a more streamlined experience.
+
 ** package.el
 First of all we have to disable =package.el=, the default Emacs
 package manager, in order to use an alternative called [[https://github.com/radian-software/straight.el][straight.el]]. It
@@ -207,25 +211,26 @@ eye-friendly color scheme.
     (doom-themes-org-config))
 #+end_src
 
-** Icons
-To make Emacs more sleek, I use the [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] package, which
-provides a rich set of icon fonts. It's especially useful since
-various packages in this configuration, like [[#icons-in-dired][all-the-icons-dired]], rely
-on these icons. The setup ensures that the necessary fonts are
-installed and ready to use.
+** Modeline
 #+begin_src elisp
-  (use-package all-the-icons
+  (use-package doom-modeline
+    :init (doom-modeline-mode 1))
+#+end_src
+
+** Icons
+#+begin_src elisp
+  (use-package nerd-icons
+    :straight (nerd-icons :type git :host github :repo "rainstormstudio/nerd-icons.el" :branch "main")
     :if (display-graphic-p)
     :config
-    ;; Check if the fonts have been installed
-    (unless (file-exists-p "~/.emacs.d/.all-the-icons-installed")
+    (unless (file-exists-p "~/.emacs.d/.nerd-icons-installed")
       ;; Temporarily override `yes-or-no-p` to always return t (yes)
       (cl-letf (((symbol-function 'yes-or-no-p) (lambda (&rest args) t))
                 ((symbol-function 'y-or-n-p) (lambda (&rest args) t)))
-        ;; Install the fonts
-        (all-the-icons-install-fonts))
+        ;; Install the nerd icons
+        (nerd-icons-install-fonts))
       ;; Create a flag file to indicate the fonts have been installed
-      (with-temp-file "~/.emacs.d/.all-the-icons-installed" (insert "Done"))))
+      (with-temp-file "~/.emacs.d/.nerd-icons-installed" (insert "Done"))))
 #+end_src
 
 ** Icons in Dired
@@ -235,11 +240,10 @@ into Dired, making it easier to identify file types at a glance. It's
 set up to activate only for local directories, keeping remote
 directories simple and clean.
 #+begin_src elisp
-  (use-package all-the-icons-dired
-    :hook (dired-mode . (lambda ()
-                          ;; Enable all-the-icons-dired-mode only for local directories
-                          (unless (file-remote-p default-directory)
-                            (all-the-icons-dired-mode)))))
+  (use-package nerd-icons-dired
+    :straight (nerd-icons-dired :type git :host github :repo "rainstormstudio/nerd-icons-dired" :branch "main")
+    :hook
+    (dired-mode . nerd-icons-dired-mode))
 #+end_src
 
 * Org Mode
