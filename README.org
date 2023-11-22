@@ -14,6 +14,7 @@ in general.
 - [[#installation][Installation]]
   - [[#automatic][Automatic]]
   - [[#manual][Manual]]
+  - [[#using-this-configuration-directly][Using This Configuration Directly]]
   - [[#requirements--dependencies][Requirements / Dependencies]]
 - [[#package-management][Package Management]]
   - [[#packageel][package.el]]
@@ -48,6 +49,10 @@ in general.
   - [[#tell-a-fortune][Tell a Fortune]]
 
 * Installation
+This section details various methods to install and set up this Emacs
+configuration, catering to different preferences - automatic, manual,
+or directly using the org file.
+
 ** Automatic
 For a quick and automatic setup, you can use the following
 script. This script will clone the repository, create the necessary
@@ -57,6 +62,7 @@ have =emacs= installed on your system.
 Execute the following command in your terminal. It will perform all
 necessary steps to set up the Emacs configuration:
 #+begin_src sh :tangle no
+  # Download and execute the installation script
   curl -sL https://raw.githubusercontent.com/sk4rd/emacs.d/master/install.sh | bash
 #+end_src
 
@@ -69,6 +75,7 @@ have a configuration in =~/.emacs.d=, consider backing it up first.
 Execute the following commands in your terminal to clone the
 repository and move the files:
 #+begin_src sh :tangle no
+  # Clone the repository and move the configuration files to ~/.emacs.d
   git clone https://github.com/sk4rd/emacs.d.git
   mkdir -p ~/.emacs.d
   mv ./emacs.d/init.el ./emacs.d/early-init.el ~/.emacs.d/
@@ -82,6 +89,7 @@ You can use this README (=README.org=) directly as your Emacs
 configuration file. This method involves executing the Emacs Lisp
 (elisp) code blocks contained within the org file.
 #+begin_src sh :tangle no
+  # Move the README.org file to be used directly as Emacs configuration
   mkdir -p ~/.emacs.d
   mv ./emacs.d/README.org ~/.emacs.d/
 #+end_src
@@ -95,7 +103,7 @@ Then you need to put the following into your =init.el=.
 #+end_src
 
 ** Requirements / Dependencies
-Before proceeding with the installation and setup of this Emacs
+Before proceeding with the installation and set-up of this Emacs
 configuration, please ensure the following dependencies are installed
 on your system:
 
@@ -115,7 +123,7 @@ package manager, in order to use an alternative called [[https://github.com/radi
 needs to be disabled before anything else so it will be put into the
 =early-init.el= file.
 #+begin_src elisp :tangle early-init.el
-  ;; Disable Emacs's default package manager
+  ;; Disable the default Emacs package manager, package.el
   (setq package-enable-at-startup nil)
 #+end_src
 
@@ -125,18 +133,18 @@ install [[https://github.com/radian-software/straight.el][straight.el]]. It is a
 clones the remote git repository and builds it for you. It has good
 [[https://github.com/jwiegley/use-package][use-package]] integration.
 #+begin_src elisp
-  ;; Install and bootstrap straight.el
+  ;; Install and configure straight.el as the package manager
   (defvar bootstrap-version)
   (let ((bootstrap-file
-	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-	(bootstrap-version 6))
+  	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+  	(bootstrap-version 6))
     (unless (file-exists-p bootstrap-file)
       (with-current-buffer
-	  (url-retrieve-synchronously
-	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-	   'silent 'inhibit-cookies)
-	(goto-char (point-max))
-	(eval-print-last-sexp)))
+  	  (url-retrieve-synchronously
+  	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+  	   'silent 'inhibit-cookies)
+  	(goto-char (point-max))
+  	(eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
 #+end_src
 
@@ -146,7 +154,7 @@ convenient syntax to configure emacs. Since we already added
 [[https://github.com/radian-software/straight.el][straight.el]] we can easily integrate it. I also want [[https://github.com/jwiegley/use-package][use-package]] to use
 sources from straight by default.
 #+begin_src elisp
-  ;; Install use-package using straight.el
+  ;; Install and configure use-package, setting straight.el as the default source
   (straight-use-package 'use-package)
   ;; Configure use-package to use straight.el by default
   (use-package straight

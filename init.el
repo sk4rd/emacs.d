@@ -1,4 +1,4 @@
-;; Install and bootstrap straight.el
+;; Install and configure straight.el as the package manager
 (defvar bootstrap-version)
 (let ((bootstrap-file
 	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -12,7 +12,7 @@
 	(eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; Install use-package using straight.el
+;; Install and configure use-package, setting straight.el as the default source
 (straight-use-package 'use-package)
 ;; Configure use-package to use straight.el by default
 (use-package straight

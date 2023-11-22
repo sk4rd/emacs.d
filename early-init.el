@@ -1,4 +1,4 @@
-;; Disable Emacs's default package manager
+;; Disable the default Emacs package manager, package.el
 (setq package-enable-at-startup nil)
 
 ;; Configure Emacs to store backup and autosave files in separate subdirectories
