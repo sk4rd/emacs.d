@@ -155,8 +155,8 @@ sources from straight by default.
   ;; Configure use-package to use straight.el by default
   (use-package straight
     :custom
-    (straight-use-package-by-default t))
-  (setq use-package-always-ensure t)
+    (straight-use-package-by-default t)
+    (use-package-always-ensure t))
 #+end_src
 
 * User Interface
@@ -219,8 +219,10 @@ eye-friendly color scheme.
 
 ** Icons
 #+begin_src elisp
+  (straight-use-package '(nerd-icons :host github
+                                     :repo "rainstormstudio/nerd-icons.el"
+                                     :branch "main"))
   (use-package nerd-icons
-    :straight (nerd-icons :type git :host github :repo "rainstormstudio/nerd-icons.el" :branch "main")
     :if (display-graphic-p)
     :config
     (unless (file-exists-p "~/.emacs.d/.nerd-icons-installed")
@@ -240,10 +242,11 @@ into Dired, making it easier to identify file types at a glance. It's
 set up to activate only for local directories, keeping remote
 directories simple and clean.
 #+begin_src elisp
+  (straight-use-package '(nerd-icons-dired :host github
+  					 :repo "rainstormstudio/nerd-icons-dired"
+  					 :branch "main"))
   (use-package nerd-icons-dired
-    :straight (nerd-icons-dired :type git :host github :repo "rainstormstudio/nerd-icons-dired" :branch "main")
-    :hook
-    (dired-mode . nerd-icons-dired-mode))
+    :hook (dired-mode . nerd-icons-dired-mode))
 #+end_src
 
 * Org Mode

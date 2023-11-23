@@ -17,8 +17,8 @@
 ;; Configure use-package to use straight.el by default
 (use-package straight
   :custom
-  (straight-use-package-by-default t))
-(setq use-package-always-ensure t)
+  (straight-use-package-by-default t)
+  (use-package-always-ensure t))
 
 ;; Setting 'Iosevka' as the default font, if it's available
 (when (member "Iosevka" (font-family-list))
@@ -51,8 +51,10 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1))
 
+(straight-use-package '(nerd-icons :host github
+                                   :repo "rainstormstudio/nerd-icons.el"
+                                   :branch "main"))
 (use-package nerd-icons
-  :straight (nerd-icons :type git :host github :repo "rainstormstudio/nerd-icons.el" :branch "main")
   :if (display-graphic-p)
   :config
   (unless (file-exists-p "~/.emacs.d/.nerd-icons-installed")
@@ -64,10 +66,11 @@
     ;; Create a flag file to indicate the fonts have been installed
     (with-temp-file "~/.emacs.d/.nerd-icons-installed" (insert "Done"))))
 
+(straight-use-package '(nerd-icons-dired :host github
+					 :repo "rainstormstudio/nerd-icons-dired"
+					 :branch "main"))
 (use-package nerd-icons-dired
-  :straight (nerd-icons-dired :type git :host github :repo "rainstormstudio/nerd-icons-dired" :branch "main")
-  :hook
-  (dired-mode . nerd-icons-dired-mode))
+  :hook (dired-mode . nerd-icons-dired-mode))
 
 ;; Configure org-mode and related features
 (use-package org
