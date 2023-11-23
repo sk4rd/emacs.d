@@ -51,10 +51,8 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1))
 
-(straight-use-package '(nerd-icons :host github
-                                   :repo "rainstormstudio/nerd-icons.el"
-                                   :branch "main"))
 (use-package nerd-icons
+  :straight (nerd-icons :host github :repo "rainstormstudio/nerd-icons.el" :branch "main")
   :if (display-graphic-p)
   :config
   (unless (file-exists-p "~/.emacs.d/.nerd-icons-installed")
@@ -66,10 +64,8 @@
     ;; Create a flag file to indicate the fonts have been installed
     (with-temp-file "~/.emacs.d/.nerd-icons-installed" (insert "Done"))))
 
-(straight-use-package '(nerd-icons-dired :host github
-					 :repo "rainstormstudio/nerd-icons-dired"
-					 :branch "main"))
 (use-package nerd-icons-dired
+  :straight (nerd-icons-dired :host github :repo "rainstormstudio/nerd-icons-dired" :branch "main")
   :hook (dired-mode . nerd-icons-dired-mode))
 
 ;; Configure org-mode and related features
