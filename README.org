@@ -30,7 +30,7 @@ in general.
   - [[#theme][Theme]]
   - [[#modeline][Modeline]]
   - [[#icons][Icons]]
-  - [[#icons-in-dired][Icons in Dired]]
+  - [[#dirvish][Dirvish]]
 - [[#org-mode-configuration][Org Mode Configuration]]
   - [[#org][Org]]
   - [[#bullets][Bullets]]
@@ -245,7 +245,6 @@ uses [[https://github.com/rainstormstudio/nerd-icons.el][nerd-icons]] to embed i
 includes automated installation of the necessary icon fonts.
 #+begin_src elisp
   (use-package nerd-icons
-    :straight (nerd-icons :host github :repo "rainstormstudio/nerd-icons.el" :branch "main")
     :if (display-graphic-p)
     :config
     (unless (file-exists-p "~/.emacs.d/.nerd-icons-installed")
@@ -258,16 +257,28 @@ includes automated installation of the necessary icon fonts.
       (with-temp-file "~/.emacs.d/.nerd-icons-installed" (insert "Done"))))
 #+end_src
 
-** Icons in Dired
-For a more visually intuitive experience in Dired mode, I use
-[[https://github.com/jtbm37/all-the-icons-dired][all-the-icons-dired]]. This package integrates icons from [[#icons][all-the-icons]]
-into Dired, making it easier to identify file types at a glance. It's
-set up to activate only for local directories, keeping remote
-directories simple and clean.
+** Dirvish
 #+begin_src elisp
-  (use-package nerd-icons-dired
-    :straight (nerd-icons-dired :host github :repo "rainstormstudio/nerd-icons-dired" :branch "main")
-    :hook (dired-mode . nerd-icons-dired-mode))
+  (use-package dirvish
+    :init
+    (dirvish-override-dired-mode)
+    :config
+    (setq dirvish-mode-line-format
+          '(:left (sort symlink) :right (omit yank index)))
+    (setq dirvish-mode-line-height 10)
+    (setq dirvish-attributes
+          '(nerd-icons file-time file-size collapse subtree-state vc-state git-msg))
+    (setq dirvish-subtree-state-style 'nerd)
+    (setq delete-by-moving-to-trash t)
+    (setq dirvish-path-separators (list
+                                   (format "  %s " (nerd-icons-codicon "nf-cod-home"))
+                                   (format "  %s " (nerd-icons-codicon "nf-cod-root_folder"))
+                                   (format " %s " (nerd-icons-faicon "nf-fa-angle_right"))))
+    (setq dired-listing-switches
+          "-l --almost-all --human-readable --group-directories-first --no-group")
+    (dirvish-peek-mode) ; Preview files in minibuffer
+    (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
+  )
 #+end_src
 
 * Org Mode Configuration
