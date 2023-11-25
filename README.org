@@ -2,6 +2,7 @@
 #+options: num:nil toc:nil
 #+property: header-args :results silent :tangle init.el
 
+* Introduction
 This is my personal emacs configuration inside of an org file. I use
 this config mostly for school but also for programming and daily notes
 in general.
@@ -10,72 +11,57 @@ in general.
 
 [[file:preview.png]]
 
-* Table of Contents (use-package org-roam
-   :ensure t
-   :after org
-   :init
-   (setq org-roam-v2-ack t)
-   :custom
-   (org-roam-directory "~/docs/notes/")
-   (org-roam-completion-everywhere t)
-   (org-roam-dailies-capture-templates
-    '(("d" "default" entry "* %<%I:%M %p>: %?"
-	:if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
-   :bind (("C-c n l" . org-roam-buffer-toggle)
-	   ("C-c n f" . org-roam-node-find)
-	   ("C-c n i" . org-roam-node-insert)
-	   :map org-mode-map
-	   ("C-M-i" . completion-at-point)
-	   :map org-roam-dailies-map
-	   ("Y" . org-roam-dailies-capture-yesterday)
-	   ("T" . org-roam-dailies-capture-tomorrow))
-   :bind-keymap
-   ("C-c n d" . org-roam-dailies-map)
-   :config
-   (require 'org-roam-dailies) ;; Ensure the keymap is available
-   (org-roam-db-autosync-mode))
+* Table of Contents
 - [[#installation][Installation]]
   - [[#automatic][Automatic]]
   - [[#manual][Manual]]
-  - [[#using-this-configuration-directly][Using This Configuration Directly]]
   - [[#requirements--dependencies][Requirements / Dependencies]]
 - [[#package-management][Package Management]]
   - [[#packageel][package.el]]
   - [[#straightel][straight.el]]
   - [[#use-package][use-package]]
-- [[#user-interface][User Interface]]
+- [[#user-interface-enhancements][User Interface Enhancements]]
   - [[#font][Font]]
   - [[#bars][Bars]]
   - [[#line-numbers][Line Numbers]]
   - [[#theme][Theme]]
+  - [[#modeline][Modeline]]
   - [[#icons][Icons]]
-  - [[#icons-in-dired][Icons in Dired]]
-- [[#org-mode][Org Mode]]
+  - [[#dirvish][Dirvish]]
+- [[#org-mode-configuration][Org Mode Configuration]]
   - [[#org][Org]]
   - [[#bullets][Bullets]]
   - [[#roam][Roam]]
   - [[#roam-ui][Roam UI]]
-- [[#lsp-mode][LSP Mode]]
-  - [[#lsp-mode][LSP]]
-  - [[#lsp-ui][LSP UI]]
-  - [[#lsp-java][Java]]
-  - [[#lsp-nix][Nix]]
-  - [[#lsp-treemacs][Treemacs]]
-  - [[#lsp-helm][Helm]]
-- [[#coding-languages][Coding Languages]]
-  - [[#java][Java]]
-  - [[#nix][Nix]]
-- [[#other][Other]]
-- [[#miscellaneous][Miscellaneous]]
+- [[#development-environment][Development Environment]]
+  - [[#lsp-mode][LSP Mode]]
+    - [[#lsp][LSP]]
+    - [[#lsp-ui][LSP UI]]
+    - [[#lsp-java][Java]]
+    - [[#lsp-nix][Nix]]
+    - [[#lsp-treemacs][Treemacs]]
+    - [[#lsp-helm][Helm]]
+  - [[#coding-languages][Coding Languages]]
+    - [[#java][Java]]
+    - [[#nix][Nix]]
+- [[#essential-tools-and-utilities][Essential Tools and Utilities]]
+  - [[#magit][magit]]
+  - [[#dired-subtree][dired-subtree]]
+  - [[#which-key][which-key]]
+  - [[#helm-mode][helm-mode]]
+  - [[#projectile][projectile]]
+  - [[#flycheck][flycheck]]
+  - [[#yasnippet][yasnippet]]
+    - [[#yasnippet-java-mode][yasnippet-java-mode]]
+  - [[#hydra][hydra]]
+  - [[#company][company]]
+  - [[#dap-mode][dap-mode]]
+- [[#miscellaneous-enhancements][Miscellaneous Enhancements]]
   - [[#backup-and-autosave-files][Backup and Autosave files]]
   - [[#surpress-native-comp-warnings][Surpress native-comp warnings]]
   - [[#tell-a-fortune][Tell a Fortune]]
 
 * Installation
-This section details various methods to install and set up this Emacs
-configuration, catering to different preferences - automatic, manual,
-or directly using the org file.
-
 ** Automatic
 For a quick and automatic setup, you can use the following
 script. This script will clone the repository, create the necessary
@@ -89,7 +75,7 @@ necessary steps to set up the Emacs configuration:
   curl -sL https://raw.githubusercontent.com/sk4rd/emacs.d/master/install.sh | bash
 #+end_src
 
-** Manual
+*** Manual
 If you prefer to install this configuration manually, start by cloning
 the repository. Then, move (or copy) the =init.el= and =early-init.el=
 files into your default Emacs directory (=~/.emacs.d=). If you already
@@ -107,7 +93,7 @@ repository and move the files:
 Alternatively, if you wish to copy instead of moving the files,
 replace =mv= with =cp= in the above command.
 
-** Using This Configuration Directly
+*** Using This Configuration Directly
 You can use this README (=README.org=) directly as your Emacs
 configuration file. This method involves executing the Emacs Lisp
 (elisp) code blocks contained within the org file.
@@ -140,6 +126,10 @@ on your system:
    operating systems. Install it using your system's package manager.
 
 * Package Management
+Here, I outline how Emacs packages are managed in my setup, focusing
+on the transition from the default package manager to alternatives
+like straight.el and use-package for a more streamlined experience.
+
 ** package.el
 First of all we have to disable =package.el=, the default Emacs
 package manager, in order to use an alternative called [[https://github.com/radian-software/straight.el][straight.el]]. It
@@ -182,11 +172,11 @@ sources from straight by default.
   ;; Configure use-package to use straight.el by default
   (use-package straight
     :custom
-    (straight-use-package-by-default t))
-  (setq use-package-always-ensure t)
+    (straight-use-package-by-default t)
+    (use-package-always-ensure t))
 #+end_src
 
-* User Interface
+* User Interface Enhancements
 Below, you'll find the tweaks I've applied to Emacs' UI, making it
 more visually appealing and user-friendly.
 
@@ -238,42 +228,60 @@ eye-friendly color scheme.
     (doom-themes-org-config))
 #+end_src
 
-** Icons
-To make Emacs more sleek, I use the [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] package, which
-provides a rich set of icon fonts. It's especially useful since
-various packages in this configuration, like [[#icons-in-dired][all-the-icons-dired]], rely
-on these icons. The setup ensures that the necessary fonts are
-installed and ready to use.
+** Modeline
+This section configures the modeline at the bottom of the Emacs
+window. I use [[https://github.com/seagle0128/doom-modeline][doom-modeline]] for its aesthetic appeal and informative
+features. It enhances the default modeline with additional information
+like file encoding, line numbers, and git branch status.
 #+begin_src elisp
-  (use-package all-the-icons
+  (use-package doom-modeline
+    :init (doom-modeline-mode 1))
+#+end_src
+
+** Icons
+Icons in Emacs enhance the visual experience by providing graphical
+representations for file types and other elements. This configuration
+uses [[https://github.com/rainstormstudio/nerd-icons.el][nerd-icons]] to embed icons throughout the Emacs UI. The setup
+includes automated installation of the necessary icon fonts.
+#+begin_src elisp
+  (use-package nerd-icons
     :if (display-graphic-p)
     :config
-    ;; Check if the fonts have been installed
-    (unless (file-exists-p "~/.emacs.d/.all-the-icons-installed")
+    (unless (file-exists-p "~/.emacs.d/.nerd-icons-installed")
       ;; Temporarily override `yes-or-no-p` to always return t (yes)
       (cl-letf (((symbol-function 'yes-or-no-p) (lambda (&rest args) t))
                 ((symbol-function 'y-or-n-p) (lambda (&rest args) t)))
-        ;; Install the fonts
-        (all-the-icons-install-fonts))
+        ;; Install the nerd icons
+        (nerd-icons-install-fonts))
       ;; Create a flag file to indicate the fonts have been installed
-      (with-temp-file "~/.emacs.d/.all-the-icons-installed" (insert "Done"))))
+      (with-temp-file "~/.emacs.d/.nerd-icons-installed" (insert "Done"))))
 #+end_src
 
-** Icons in Dired
-For a more visually intuitive experience in Dired mode, I use
-[[https://github.com/jtbm37/all-the-icons-dired][all-the-icons-dired]]. This package integrates icons from [[#icons][all-the-icons]]
-into Dired, making it easier to identify file types at a glance. It's
-set up to activate only for local directories, keeping remote
-directories simple and clean.
+** Dirvish
 #+begin_src elisp
-  (use-package all-the-icons-dired
-    :hook (dired-mode . (lambda ()
-                          ;; Enable all-the-icons-dired-mode only for local directories
-                          (unless (file-remote-p default-directory)
-                            (all-the-icons-dired-mode)))))
+  (use-package dirvish
+    :init
+    (dirvish-override-dired-mode)
+    :config
+    (setq dirvish-mode-line-format
+          '(:left (sort symlink) :right (omit yank index)))
+    (setq dirvish-mode-line-height 10)
+    (setq dirvish-attributes
+          '(nerd-icons file-time file-size collapse subtree-state vc-state git-msg))
+    (setq dirvish-subtree-state-style 'nerd)
+    (setq delete-by-moving-to-trash t)
+    (setq dirvish-path-separators (list
+                                   (format "  %s " (nerd-icons-codicon "nf-cod-home"))
+                                   (format "  %s " (nerd-icons-codicon "nf-cod-root_folder"))
+                                   (format " %s " (nerd-icons-faicon "nf-fa-angle_right"))))
+    (setq dired-listing-switches
+          "-l --almost-all --human-readable --group-directories-first --no-group")
+    (dirvish-peek-mode) ; Preview files in minibuffer
+    (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
+  )
 #+end_src
 
-* Org Mode
+* Org Mode Configuration
 ** Org
 [[https://orgmode.org/][Org mode]] is one of the most powerful features of Emacs, allowing for note-taking,
 organization, document compilation, code execution, and more.
@@ -354,8 +362,13 @@ default browser.
     (org-roam-ui-open-on-start t)) ; Open UI automatically at start
 #+end_src
 
-* LSP Mode
-** LSP
+* Development Environment
+** LSP Mode
+Language Server Protocol (LSP) support is essential for modern
+programming environments. This section details the setup of [[https://github.com/emacs-lsp/lsp-mode][lsp-mode]],
+which provides features like auto-completion, code navigation, and
+real-time feedback from language servers for various programming
+languages
 #+begin_src elisp
   (use-package lsp-mode
     :hook ((lsp-mode . lsp-enable-which-key-integration))
@@ -363,18 +376,22 @@ default browser.
     (setq lsp-completion-enable-additional-text-edit nil))
 #+end_src
 
-** LSP UI
+*** LSP UI
+To complement [[#lsp][lsp-mode]], [[https://github.com/emacs-lsp/lsp-ui][lsp-ui]] offers additional user interface
+components for a richer programming experience. This includes inline
+code actions, hover documentation, and a sidebar showing symbols in
+the current file.
 #+begin_src elisp
   (use-package lsp-ui)
 #+end_src
 
-** LSP Java
+*** LSP Java
 #+begin_src elisp
   (use-package lsp-java
     :config (add-hook 'java-mode-hook 'lsp))
 #+end_src
 
-** LSP Nix
+*** LSP Nix
 #+begin_src elisp
   (use-package lsp-nix
     :straight (lsp-nix :type git :host github :repo "oxalica/nil")
@@ -384,18 +401,18 @@ default browser.
     (lsp-nix-nil-formatter ["nixpkgs-fmt"]))
 #+end_src
 
-** LSP Treemacs
+*** LSP Treemacs
 #+begin_src elisp
   (use-package lsp-treemacs)
 #+end_src
 
-** LSP Helm
+*** LSP Helm
 #+begin_src elisp
   (use-package helm-lsp)
 #+end_src
 
-* Coding Languages
-** Java
+** Coding Languages
+*** Java
 #+begin_src elisp
   (use-package java-mode
     :straight (:type built-in)
@@ -407,7 +424,7 @@ default browser.
                          (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))))
 #+end_src
 
-** Nix
+*** Nix
 Nix language support for emacs.
 #+begin_src elisp
   (use-package nix-mode
@@ -415,7 +432,7 @@ Nix language support for emacs.
     :hook (nix-mode . lsp-deferred))
 #+end_src
 
-* Other
+* Essential Tools and Utilities
 ** magit
 [[https://magit.vc/][Magit]] enables git integration inside of emacs. You can open the main
 menu of [[https://github.com/magit/magit][magit]] inside a project with a =.git= directory.
@@ -464,6 +481,10 @@ very useful.
 #+end_src
 
 ** projectile
+[[https://github.com/bbatsov/projectile][Projectile]] is a project interaction library for Emacs. It provides
+easy navigation and management of projects. This configuration sets up
+Projectile, including a custom search path for projects and
+keybindings for quick access to Projectile commands.
 #+begin_src elisp
   (use-package projectile
     :custom (projectile-project-search-path '("~/docs/projects"))
@@ -472,32 +493,54 @@ very useful.
 #+end_src
 
 ** flycheck
+[[https://github.com/flycheck/flycheck][Flycheck]] is an on-the-fly syntax checking extension for Emacs. This
+section configures Flycheck to automatically check the syntax of your
+code in various programming languages, helping to catch errors early
+in the development process.
 #+begin_src elisp
   (use-package flycheck)
 #+end_src
 
 ** yasnippet
+[[https://github.com/joaotavora/yasnippet][Yasnippet]] is a template system for Emacs. It allows you to type an
+abbreviation and automatically expand it into function templates,
+loops, and other code snippets. This section sets up Yasnippet for
+global use across all major modes in Emacs.
 #+begin_src elisp
   (use-package yasnippet
     :config (yas-global-mode))
 #+end_src
 
-** yasnippet-java-mode
+*** yasnippet-java-mode
+This subsection extends [[#yasnippet][Yasnippet]] support [[https://github.com/nekop/yasnippet-java-mode][specifically for Java]]
+development. It includes a set of predefined Java snippets, making it
+easier and faster to write common Java code patterns.
 #+begin_src elisp
   (straight-use-package 'java-snippets)
 #+end_src
 
 ** hydra
+[[https://github.com/abo-abo/hydra][Hydra]] provides a way to group related commands and bind them to a
+single key sequence in Emacs. This section configures Hydra to create
+more intuitive and efficient keybindings for various Emacs commands.
 #+begin_src elisp
   (use-package hydra)
 #+end_src
 
 ** company
+[[https://github.com/company-mode/company-mode][Company]] is an extensible inline text completion framework in
+Emacs. This configuration sets up Company mode for use across various
+programming languages, providing intelligent code completion
+suggestions as you type.
 #+begin_src elisp
   (use-package company)
 #+end_src
 
 ** dap-mode
+Debug Adapter Protocol (DAP) support in Emacs is provided by
+[[https://github.com/emacs-lsp/dap-mode][dap-mode]]. This section includes setup for integrating with various
+debuggers, allowing for powerful debugging capabilities directly
+within Emacs.
 #+begin_src elisp
   (use-package dap-mode
     :after lsp-mode

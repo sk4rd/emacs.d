@@ -17,8 +17,8 @@
 ;; Configure use-package to use straight.el by default
 (use-package straight
   :custom
-  (straight-use-package-by-default t))
-(setq use-package-always-ensure t)
+  (straight-use-package-by-default t)
+  (use-package-always-ensure t))
 
 ;; Setting 'Iosevka' as the default font, if it's available
 (when (member "Iosevka" (font-family-list))
@@ -48,24 +48,41 @@
   (doom-themes-visual-bell-config)
   (doom-themes-org-config))
 
-(use-package all-the-icons
+(use-package doom-modeline
+  :init (doom-modeline-mode 1))
+
+(use-package nerd-icons
   :if (display-graphic-p)
   :config
-  ;; Check if the fonts have been installed
-  (unless (file-exists-p "~/.emacs.d/.all-the-icons-installed")
+  (unless (file-exists-p "~/.emacs.d/.nerd-icons-installed")
     ;; Temporarily override `yes-or-no-p` to always return t (yes)
     (cl-letf (((symbol-function 'yes-or-no-p) (lambda (&rest args) t))
               ((symbol-function 'y-or-n-p) (lambda (&rest args) t)))
-      ;; Install the fonts
-      (all-the-icons-install-fonts))
+      ;; Install the nerd icons
+      (nerd-icons-install-fonts))
     ;; Create a flag file to indicate the fonts have been installed
-    (with-temp-file "~/.emacs.d/.all-the-icons-installed" (insert "Done"))))
+    (with-temp-file "~/.emacs.d/.nerd-icons-installed" (insert "Done"))))
 
-(use-package all-the-icons-dired
-  :hook (dired-mode . (lambda ()
-                        ;; Enable all-the-icons-dired-mode only for local directories
-                        (unless (file-remote-p default-directory)
-                          (all-the-icons-dired-mode)))))
+(use-package dirvish
+  :init
+  (dirvish-override-dired-mode)
+  :config
+  (setq dirvish-mode-line-format
+        '(:left (sort symlink) :right (omit yank index)))
+  (setq dirvish-mode-line-height 10)
+  (setq dirvish-attributes
+        '(nerd-icons file-time file-size collapse subtree-state vc-state git-msg))
+  (setq dirvish-subtree-state-style 'nerd)
+  (setq delete-by-moving-to-trash t)
+  (setq dirvish-path-separators (list
+                                 (format "  %s " (nerd-icons-codicon "nf-cod-home"))
+                                 (format "  %s " (nerd-icons-codicon "nf-cod-root_folder"))
+                                 (format " %s " (nerd-icons-faicon "nf-fa-angle_right"))))
+  (setq dired-listing-switches
+        "-l --almost-all --human-readable --group-directories-first --no-group")
+  (dirvish-peek-mode) ; Preview files in minibuffer
+  (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
+)
 
 ;; Configure org-mode and related features
 (use-package org
