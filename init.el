@@ -80,9 +80,7 @@
                                  (format " %s " (nerd-icons-faicon "nf-fa-angle_right"))))
   (setq dired-listing-switches
         "-l --almost-all --human-readable --group-directories-first --no-group")
-  (dirvish-peek-mode) ; Preview files in minibuffer
-  (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
-)
+  (dirvish-side-follow-mode))
 
 ;; Configure org-mode and related features
 (use-package org
@@ -154,7 +152,9 @@
   :ensure lsp-mode
   :after (lsp-mode)
   :custom
-  (lsp-nix-nil-formatter ["nixpkgs-fmt"]))
+  (lsp-nix-nil-formatter ["nixpkgs-fmt"])
+  :config
+  (add-hook 'nix-mode-hook 'lsp))
 
 (use-package lsp-treemacs)
 
@@ -171,7 +171,9 @@
 
 (use-package nix-mode
   :mode "\\.nix\\'"
-  :hook (nix-mode . lsp-deferred))
+  :hook ((nix-mode . lsp-deferred)
+         (nix-mode . (lambda ()
+                       (add-hook 'before-save-hook 'nix-format-buffer nil t)))))
 
 (use-package magit
   :bind

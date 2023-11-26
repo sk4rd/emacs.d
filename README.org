@@ -276,9 +276,7 @@ includes automated installation of the necessary icon fonts.
                                    (format " %s " (nerd-icons-faicon "nf-fa-angle_right"))))
     (setq dired-listing-switches
           "-l --almost-all --human-readable --group-directories-first --no-group")
-    (dirvish-peek-mode) ; Preview files in minibuffer
-    (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
-  )
+    (dirvish-side-follow-mode))
 #+end_src
 
 * Org Mode Configuration
@@ -398,7 +396,9 @@ the current file.
     :ensure lsp-mode
     :after (lsp-mode)
     :custom
-    (lsp-nix-nil-formatter ["nixpkgs-fmt"]))
+    (lsp-nix-nil-formatter ["nixpkgs-fmt"])
+    :config
+    (add-hook 'nix-mode-hook 'lsp))
 #+end_src
 
 *** LSP Treemacs
@@ -429,7 +429,9 @@ Nix language support for emacs.
 #+begin_src elisp
   (use-package nix-mode
     :mode "\\.nix\\'"
-    :hook (nix-mode . lsp-deferred))
+    :hook ((nix-mode . lsp-deferred)
+           (nix-mode . (lambda ()
+                         (add-hook 'before-save-hook 'nix-format-buffer nil t)))))
 #+end_src
 
 * Essential Tools and Utilities
