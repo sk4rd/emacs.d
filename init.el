@@ -160,7 +160,7 @@
   :ensure lsp-mode
   :after (lsp-mode)
   :custom
-  (lsp-nix-nil-formatter ["nixpkgs-fmt"])
+  (lsp-nix-nil-formatter ["nixfmt"])
   :config
   (add-hook 'nix-mode-hook 'lsp))
 
