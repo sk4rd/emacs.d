@@ -27,6 +27,7 @@ in general.
   - [[#font][Font]]
   - [[#bars][Bars]]
   - [[#line-numbers][Line Numbers]]
+  - [[#indentation-guides][Indentation Guides]]
   - [[#theme][Theme]]
   - [[#modeline][Modeline]]
   - [[#icons][Icons]]
@@ -211,6 +212,19 @@ code readability.
   ;; Add line numbers to programming buffers
   (add-hook 'prog-mode-hook (lambda ()
                               (display-line-numbers-mode 1)))
+#+end_src
+
+** Indentation Guides
+In conjunction to line number, I also enabled indentation guides for
+better code readability.
+#+begin_src elisp
+  (use-package highlight-indent-guides
+    :hook (prog-mode . highlight-indent-guides-mode)
+    :custom
+    (highlight-indent-guides-method 'character)
+    (highlight-indent-guides-responsive 'top)
+    (highlight-indent-guides-auto-character-face-perc 15)
+    (highlight-indent-guides-auto-top-character-face-perc 100))
 #+end_src
 
 ** Theme

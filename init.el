@@ -38,6 +38,14 @@
 (add-hook 'prog-mode-hook (lambda ()
                             (display-line-numbers-mode 1)))
 
+(use-package highlight-indent-guides
+  :hook (prog-mode . highlight-indent-guides-mode)
+  :custom
+  (highlight-indent-guides-method 'character)
+  (highlight-indent-guides-responsive 'top)
+  (highlight-indent-guides-auto-character-face-perc 15)
+  (highlight-indent-guides-auto-top-character-face-perc 100))
+
 ;; Apply the 'gruvbox' theme for a comfortable visual experience
 (use-package doom-themes
   :custom
