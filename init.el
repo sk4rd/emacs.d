@@ -225,3 +225,6 @@
 (use-package dap-mode
   :after lsp-mode
   :config (dap-auto-configure-mode))
+
+(use-package ace-window
+  :bind ("M-o" . ace-window))

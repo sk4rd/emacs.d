@@ -359,9 +359,9 @@ note-taking method called [[https://zettelkasten.de/posts/overview/][Zettelkaste
 
 ** Roam UI
 Visualizing notes is a key concept I like to follow in learning. I use
-[[https://github.com/org-roam/org-roam-ui][org-roam-ui]] to view my notes as a kind of 'neural network' in my
-browser. It spawns an http server inside of emacs and opens it in your
-default browser.
+[[https://github.com/org-roam/org-roam-ui][org-roam-ui]] to view my
+notes as a kind of 'neural network' in my browser. It spawns an http
+server inside of emacs and opens it in your default browser.
 #+begin_src elisp
   ;; Configure org-roam-ui for visualizing org-roam notes
   (use-package org-roam-ui
@@ -398,6 +398,8 @@ the current file.
 #+end_src
 
 *** LSP Java
+Below you'll find Java specific configuration for the LSP language
+server.
 #+begin_src elisp
   (use-package lsp-java
     :config (add-hook 'java-mode-hook 'lsp))
@@ -563,6 +565,13 @@ within Emacs.
     :config (dap-auto-configure-mode))
 #+end_src
 
+** ace-window
+[[https://github.com/abo-abo/ace-window][ace-window]] allows switching quickly between multiple windows in
+Emacs. Sadly default Emacs lacks this immensly useful feature.
+#+begin_src elisp
+  (use-package ace-window
+    :bind ("M-o" . ace-window))
+#+end_src
 
 * Miscellaneous
 This section includes a range of Emacs customizations that don't fall
