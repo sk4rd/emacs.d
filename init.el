@@ -114,26 +114,26 @@
 ;; Configure org-roam for personal knowledge management
 (use-package org-roam
   :init
-  (setq org-roam-v2-ack t)  ; Acknowledge migration to org-roam v2
+  (setq org-roam-v2-ack t)
   :custom
-  (org-roam-directory "~/docs/notes/")  ; Set main directory for org-roam files
-  (org-roam-completion-everywhere t)  ; Enable org-roam completion across all org buffers
+  (org-roam-directory "~/docs/notes")
+  (org-roam-completion-everywhere t)
   (org-roam-dailies-capture-templates
-   '(("d" "default" entry "* %<%I:%M %p>: %?"  ; Template for daily notes
+   '(("d" "default" entry "* %<%I:%M %p>: %?"
       :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
-  :bind
-  (("C-c n l" . org-roam-buffer-toggle)  ; Toggle org-roam buffer
-   ("C-c n f" . org-roam-node-find)      ; Find org-roam node
-   ("C-c n i" . org-roam-node-insert)    ; Insert org-roam node
-   ("C-M-i" . completion-at-point)       ; Completion at point in org-mode
-   :map org-roam-dailies-map
-   ("Y" . org-roam-dailies-capture-yesterday)  ; Capture yesterday's daily note
-   ("T" . org-roam-dailies-capture-tomorrow))  ; Capture tomorrow's daily note
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)
+         :map org-mode-map
+         ("C-M-i" . completion-at-point)
+         :map org-roam-dailies-map
+         ("Y" . org-roam-dailies-capture-yesterday)
+         ("T" . org-roam-dailies-capture-tomorrow))
   :bind-keymap
-  ("C-c n d" . org-roam-dailies-map)  ; Keymap for dailies
+  ("C-c n d" . org-roam-dailies-map)
   :config
-  (org-roam-setup)  ; Setup org-roam
-  (org-roam-db-autosync-mode))  ; Enable automatic syncing of the org-roam database
+  (require 'org-roam-dailies) ;; Ensure the keymap is available
+  (org-roam-db-autosync-mode))
 
 ;; Configure org-roam-ui for visualizing org-roam notes
 (use-package org-roam-ui
@@ -160,9 +160,7 @@
   :ensure lsp-mode
   :after (lsp-mode)
   :custom
-  (lsp-nix-nil-formatter ["nixfmt"])
-  :config
-  (add-hook 'nix-mode-hook 'lsp))
+  (lsp-nix-nil-formatter ["nixfmt"]))
 
 (use-package lsp-treemacs)
 
