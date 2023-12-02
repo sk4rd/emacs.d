@@ -1,15 +1,15 @@
 ;; Install and bootstrap straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
-	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-	(bootstrap-version 6))
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
-	  (url-retrieve-synchronously
-	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-	   'silent 'inhibit-cookies)
-	(goto-char (point-max))
-	(eval-print-last-sexp)))
+	(url-retrieve-synchronously
+	 "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	 'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
 ;; Install use-package using straight.el
@@ -21,7 +21,7 @@
   (use-package-always-ensure t))
 
 ;; Setting 'Iosevka' as the default font.
-(add-to-list 'default-frame-alist '(font . "Iosevka-12")))
+(add-to-list 'default-frame-alist '(font . "Iosevka-12"))
 (set-frame-font "Iosevka-12" nil t)
 
 ;; Strip down the GUI to the essentials
@@ -174,7 +174,7 @@
   :straight (:type built-in)
   :mode "\\.java\\'"
   :hook (java-mode . (lambda ()
-		       (setq-local indent-tabs-mode nil) ; Use spaces instead of tabs
+  		     (setq-local indent-tabs-mode nil) ; Use spaces instead of tabs
                        (electric-pair-mode 1) ; Enable electric pair mode for automatic bracket insertion
                        ;; Add a local before-save-hook to delete trailing whitespace
                        (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))))
@@ -195,8 +195,8 @@
   :config
   ;; Refresh icons when toggling dired-subtree
   (advice-add 'dired-subtree-toggle :after (lambda ()
-					       (when all-the-icons-dired-mode
-						 (revert-buffer))))
+					     (when all-the-icons-dired-mode
+					       (revert-buffer))))
   :bind (:map dired-mode-map
          ("<tab>" . dired-subtree-toggle))) ; Bind <tab> to toggle subtrees in dired-mode
 
