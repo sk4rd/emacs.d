@@ -23,8 +23,7 @@
 ;; Setting 'Iosevka' as the default font, if it's available
 (when (member "Iosevka" (font-family-list))
   (set-frame-font "Iosevka-12" nil t)
-  (setq default-frame-alist '((font . "Iosevka-12")))
-  (setq initial-frame-alist '((font . "Iosevka-12"))))
+  (add-to-list 'default-frame-alist '(font . "Iosevka-12")))
 
 ;; Strip down the GUI to the essentials
 (when (fboundp 'menu-bar-mode)
