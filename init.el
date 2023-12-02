@@ -20,10 +20,9 @@
   (straight-use-package-by-default t)
   (use-package-always-ensure t))
 
-;; Setting 'Iosevka' as the default font, if it's available
-(when (member "Iosevka" (font-family-list))
-  (set-frame-font "Iosevka-12" nil t)
-  (add-to-list 'default-frame-alist '(font . "Iosevka-12")))
+;; Setting 'Iosevka' as the default font.
+(add-to-list 'default-frame-alist '(font . "Iosevka-12")))
+(set-frame-font "Iosevka-12" nil t)
 
 ;; Strip down the GUI to the essentials
 (when (fboundp 'menu-bar-mode)

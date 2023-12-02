@@ -185,10 +185,9 @@ more visually appealing and user-friendly.
 Opting for the [[https://github.com/be5invis/Iosevka][Iosevka]] font here, known for its clarity, which is
 especially great for coding.
 #+begin_src elisp
-  ;; Setting 'Iosevka' as the default font, if it's available
-  (when (member "Iosevka" (font-family-list))
-    (set-frame-font "Iosevka-12" nil t)
-    (add-to-list 'default-frame-alist '(font . "Iosevka-12")))
+  ;; Setting 'Iosevka' as the default font.
+  (add-to-list 'default-frame-alist '(font . "Iosevka-12")))
+  (set-frame-font "Iosevka-12" nil t)
 #+end_src
 
 ** Bars
