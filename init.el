@@ -221,3 +221,12 @@
 (use-package dap-mode
   :after lsp-mode
   :config (dap-auto-configure-mode))
+
+(defun sort-elements-in-region (start end delimiter)
+  "Sort elements in the selected region using a specified delimiter."
+  (interactive "r\nsEnter delimiter: ") ; Asks for the region and the delimiter
+  (let* ((region-text (buffer-substring start end))
+         (elements (split-string region-text delimiter))
+         (sorted-elements (sort elements 'string<)))
+    (delete-region start end)
+    (insert (mapconcat 'identity sorted-elements delimiter))))
