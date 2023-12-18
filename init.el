@@ -1,18 +1,18 @@
-;; Install and bootstrap straight.el
+;; Install and configure straight.el as the package manager
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
+	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+	(bootstrap-version 6))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
-	(url-retrieve-synchronously
-	 "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-	 'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
+	  (url-retrieve-synchronously
+	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	   'silent 'inhibit-cookies)
+	(goto-char (point-max))
+	(eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; Install use-package using straight.el
+;; Install and configure use-package, setting straight.el as the default source
 (straight-use-package 'use-package)
 ;; Configure use-package to use straight.el by default
 (use-package straight
@@ -111,33 +111,33 @@
 
 ;; Configure org-roam for personal knowledge management
 (use-package org-roam
-  :init
-  (setq org-roam-v2-ack t)
-  :custom
-  (org-roam-directory "~/docs/notes")
-  (org-roam-completion-everywhere t)
-  (org-roam-capture-templates
-   '(("d" "default" plain
-      "%?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)))
-  (org-roam-dailies-capture-templates
-   '(("d" "default" entry "* %<%I:%M %p>: %?"
-      :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert)
-         :map org-mode-map
-         ("C-M-i" . completion-at-point)
-         :map org-roam-dailies-map
-         ("Y" . org-roam-dailies-capture-yesterday)
-         ("T" . org-roam-dailies-capture-tomorrow))
-  :bind-keymap
-  ("C-c n d" . org-roam-dailies-map)
-  :config
-  (require 'org-roam-dailies) ;; Ensure the keymap is available
-  (org-roam-setup)
-  (org-roam-db-autosync-mode))
+   :init
+   (setq org-roam-v2-ack t)
+   :custom
+   (org-roam-directory "~/docs/notes/")
+   (org-roam-completion-everywhere t)
+   (org-roam-capture-templates
+    '(("d" "default" plain
+       "%?"
+       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+       :unnarrowed t)))
+   (org-roam-dailies-capture-templates
+    '(("d" "default" entry "* %<%I:%M %p>: %?"
+       :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
+   :bind (("C-c n l" . org-roam-buffer-toggle)
+	  ("C-c n f" . org-roam-node-find)
+	  ("C-c n i" . org-roam-node-insert)
+	  :map org-mode-map
+	  ("C-M-i" . completion-at-point)
+	  :map org-roam-dailies-map
+	  ("Y" . org-roam-dailies-capture-yesterday)
+	  ("T" . org-roam-dailies-capture-tomorrow))
+   :bind-keymap
+   ("C-c n d" . org-roam-dailies-map)
+   :config
+   (require 'org-roam-dailies) ;; Ensure the keymap is available
+   (org-roam-setup)
+   (org-roam-db-autosync-mode))
 
 ;; Configure org-roam-ui for visualizing org-roam notes
 (use-package org-roam-ui
@@ -174,7 +174,7 @@
   :straight (:type built-in)
   :mode "\\.java\\'"
   :hook (java-mode . (lambda ()
-  		     (setq-local indent-tabs-mode nil) ; Use spaces instead of tabs
+		       (setq-local indent-tabs-mode nil) ; Use spaces instead of tabs
                        (electric-pair-mode 1) ; Enable electric pair mode for automatic bracket insertion
                        ;; Add a local before-save-hook to delete trailing whitespace
                        (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))))
@@ -195,8 +195,8 @@
   :config
   ;; Refresh icons when toggling dired-subtree
   (advice-add 'dired-subtree-toggle :after (lambda ()
-					     (when all-the-icons-dired-mode
-					       (revert-buffer))))
+					       (when all-the-icons-dired-mode
+						 (revert-buffer))))
   :bind (:map dired-mode-map
          ("<tab>" . dired-subtree-toggle))) ; Bind <tab> to toggle subtrees in dired-mode
 
@@ -230,3 +230,12 @@
 
 (use-package ace-window
   :bind ("M-o" . ace-window))
+
+(defun sort-elements-in-region (start end delimiter)
+  "Sort elements in the selected region using a specified delimiter."
+  (interactive "r\nsEnter delimiter: ") ; Asks for the region and the delimiter
+  (let* ((region-text (buffer-substring start end))
+         (elements (split-string region-text delimiter))
+         (sorted-elements (sort elements 'string<)))
+    (delete-region start end)
+    (insert (mapconcat 'identity sorted-elements delimiter))))

@@ -12,12 +12,9 @@ in general.
 [[file:preview.png]]
 
 * Table of Contents
-- [[#introduction][Introduction]]
-- [[#basic-setup][Basic Setup]]
-  - [[#installation][Installation]]
-    - [[#automatic][Automatic]]
-    - [[#manual][Manual]]
-    - [[#using-this-configuration-directly][Using This Configuration Directly]]
+- [[#installation][Installation]]
+  - [[#automatic][Automatic]]
+  - [[#manual][Manual]]
   - [[#requirements--dependencies][Requirements / Dependencies]]
 - [[#package-management][Package Management]]
   - [[#packageel][package.el]]
@@ -64,9 +61,10 @@ in general.
   - [[#backup-and-autosave-files][Backup and Autosave files]]
   - [[#surpress-native-comp-warnings][Surpress native-comp warnings]]
   - [[#tell-a-fortune][Tell a Fortune]]
+  - [[#sort-region-elements][Sort region elements]]
 
 * Installation
-*** Automatic
+** Automatic
 For a quick and automatic setup, you can use the following
 script. This script will clone the repository, create the necessary
 directories, and set up the configuration files for you. Ensure you
@@ -75,6 +73,7 @@ have =emacs= installed on your system.
 Execute the following command in your terminal. It will perform all
 necessary steps to set up the Emacs configuration:
 #+begin_src sh :tangle no
+  # Download and execute the installation script
   curl -sL https://raw.githubusercontent.com/sk4rd/emacs.d/master/install.sh | bash
 #+end_src
 
@@ -87,6 +86,7 @@ have a configuration in =~/.emacs.d=, consider backing it up first.
 Execute the following commands in your terminal to clone the
 repository and move the files:
 #+begin_src sh :tangle no
+  # Clone the repository and move the configuration files to ~/.emacs.d
   git clone https://github.com/sk4rd/emacs.d.git
   mkdir -p ~/.emacs.d
   mv ./emacs.d/init.el ./emacs.d/early-init.el ~/.emacs.d/
@@ -100,6 +100,7 @@ You can use this README (=README.org=) directly as your Emacs
 configuration file. This method involves executing the Emacs Lisp
 (elisp) code blocks contained within the org file.
 #+begin_src sh :tangle no
+  # Move the README.org file to be used directly as Emacs configuration
   mkdir -p ~/.emacs.d
   mv ./emacs.d/README.org ~/.emacs.d/
 #+end_src
@@ -113,7 +114,7 @@ Then you need to put the following into your =init.el=.
 #+end_src
 
 ** Requirements / Dependencies
-Before proceeding with the installation and setup of this Emacs
+Before proceeding with the installation and set-up of this Emacs
 configuration, please ensure the following dependencies are installed
 on your system:
 
@@ -137,7 +138,7 @@ package manager, in order to use an alternative called [[https://github.com/radi
 needs to be disabled before anything else so it will be put into the
 =early-init.el= file.
 #+begin_src elisp :tangle early-init.el
-  ;; Disable Emacs's default package manager
+  ;; Disable the default Emacs package manager, package.el
   (setq package-enable-at-startup nil)
 #+end_src
 
@@ -147,18 +148,18 @@ install [[https://github.com/radian-software/straight.el][straight.el]]. It is a
 clones the remote git repository and builds it for you. It has good
 [[https://github.com/jwiegley/use-package][use-package]] integration.
 #+begin_src elisp
-  ;; Install and bootstrap straight.el
+  ;; Install and configure straight.el as the package manager
   (defvar bootstrap-version)
   (let ((bootstrap-file
-	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-	(bootstrap-version 6))
+  	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+  	(bootstrap-version 6))
     (unless (file-exists-p bootstrap-file)
       (with-current-buffer
-	  (url-retrieve-synchronously
-	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-	   'silent 'inhibit-cookies)
-	(goto-char (point-max))
-	(eval-print-last-sexp)))
+  	  (url-retrieve-synchronously
+  	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+  	   'silent 'inhibit-cookies)
+  	(goto-char (point-max))
+  	(eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
 #+end_src
 
@@ -168,7 +169,7 @@ convenient syntax to configure emacs. Since we already added
 [[https://github.com/radian-software/straight.el][straight.el]] we can easily integrate it. I also want [[https://github.com/jwiegley/use-package][use-package]] to use
 sources from straight by default.
 #+begin_src elisp
-  ;; Install use-package using straight.el
+  ;; Install and configure use-package, setting straight.el as the default source
   (straight-use-package 'use-package)
   ;; Configure use-package to use straight.el by default
   (use-package straight
@@ -332,33 +333,33 @@ note-taking method called [[https://zettelkasten.de/posts/overview/][Zettelkaste
 #+begin_src elisp
   ;; Configure org-roam for personal knowledge management
   (use-package org-roam
-    :init
-    (setq org-roam-v2-ack t)
-    :custom
-    (org-roam-directory "~/docs/notes")
-    (org-roam-completion-everywhere t)
-    (org-roam-capture-templates
-     '(("d" "default" plain
-        "%?"
-        :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-        :unnarrowed t)))
-    (org-roam-dailies-capture-templates
-     '(("d" "default" entry "* %<%I:%M %p>: %?"
-        :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
-    :bind (("C-c n l" . org-roam-buffer-toggle)
-           ("C-c n f" . org-roam-node-find)
-           ("C-c n i" . org-roam-node-insert)
-           :map org-mode-map
-           ("C-M-i" . completion-at-point)
-           :map org-roam-dailies-map
-           ("Y" . org-roam-dailies-capture-yesterday)
-           ("T" . org-roam-dailies-capture-tomorrow))
-    :bind-keymap
-    ("C-c n d" . org-roam-dailies-map)
-    :config
-    (require 'org-roam-dailies) ;; Ensure the keymap is available
-    (org-roam-setup)
-    (org-roam-db-autosync-mode))
+     :init
+     (setq org-roam-v2-ack t)
+     :custom
+     (org-roam-directory "~/docs/notes/")
+     (org-roam-completion-everywhere t)
+     (org-roam-capture-templates
+      '(("d" "default" plain
+         "%?"
+         :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+         :unnarrowed t)))
+     (org-roam-dailies-capture-templates
+      '(("d" "default" entry "* %<%I:%M %p>: %?"
+         :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
+     :bind (("C-c n l" . org-roam-buffer-toggle)
+  	  ("C-c n f" . org-roam-node-find)
+  	  ("C-c n i" . org-roam-node-insert)
+  	  :map org-mode-map
+  	  ("C-M-i" . completion-at-point)
+  	  :map org-roam-dailies-map
+  	  ("Y" . org-roam-dailies-capture-yesterday)
+  	  ("T" . org-roam-dailies-capture-tomorrow))
+     :bind-keymap
+     ("C-c n d" . org-roam-dailies-map)
+     :config
+     (require 'org-roam-dailies) ;; Ensure the keymap is available
+     (org-roam-setup)
+     (org-roam-db-autosync-mode))
 #+end_src
 
 ** Roam UI
@@ -637,4 +638,18 @@ you start Emacs.
             (concat ";; "
                     (replace-regexp-in-string "\n" "\n;; " fortune-output)
                     "\n\n"))))
+#+end_src
+
+** Sort region elements
+This function will sort the elements within a line, assuming they are
+separated by spaces.
+#+begin_src elisp
+  (defun sort-elements-in-region (start end delimiter)
+    "Sort elements in the selected region using a specified delimiter."
+    (interactive "r\nsEnter delimiter: ") ; Asks for the region and the delimiter
+    (let* ((region-text (buffer-substring start end))
+           (elements (split-string region-text delimiter))
+           (sorted-elements (sort elements 'string<)))
+      (delete-region start end)
+      (insert (mapconcat 'identity sorted-elements delimiter))))
 #+end_src
