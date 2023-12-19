@@ -2,6 +2,10 @@
 #+options: num:nil toc:nil
 #+property: header-args :results silent :tangle init.el
 
+* [[https://codeberg.org/sk4rd/emacs.d][PROJECT MOVED TO CODEBERG.ORG]]
+
+
+
 * Introduction
 This is my personal emacs configuration inside of an org file. I use
 this config mostly for school but also for programming and daily notes
